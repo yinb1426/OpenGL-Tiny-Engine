@@ -13,3 +13,4 @@ add_executable(${PROJECT_NAME} ${CXX_FILES})	# 可执行文件
 
 link_directories(${PROJECT_SOURCE_DIR}/lib)					# 库文件路径
 target_link_libraries(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/lib/glfw3.lib)		# 目标链接文件
+target_link_libraries(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/lib/assimp-vc143-mt.lib)	

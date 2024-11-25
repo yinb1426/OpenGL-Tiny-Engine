@@ -37,7 +37,6 @@ namespace TinyEngine
 				glGenBuffers(1, &this->ID);
 			glBindBuffer(this->type, this->ID);
 			glBufferData(this->type, size, data, this->usage);
-			glBindBuffer(this->type, 0);
 		}
 
 		void UpdateBuffer(const void* data, size_t size, size_t offset)

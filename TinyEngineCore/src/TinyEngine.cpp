@@ -6,8 +6,8 @@
 #include <ResourceManager.h>
 #include <OpenGLContext.h>
 #include <StateManager.h>
-#include "Buffer.h"
 #include "Material.h"
+#include "Model.h"
 
 using namespace TinyEngine;
 
@@ -19,7 +19,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 int main()
 {
-    Camera camera(glm::vec3(3.0f, 1.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f), -135.0f, -15.0f);
+    Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
     // glfw: initialize and configure
     // ------------------------------
@@ -34,8 +34,6 @@ int main()
     resourceManager.AddTexture("Awesomeface", std::make_shared<Texture>(TEXTURE_PATH "/awesomeface.png"));
 
     std::shared_ptr<Shader> shaderProgram = resourceManager.GetShader("Cube Shader2");
-    std::shared_ptr<Texture> texture = resourceManager.GetTexture("Container");
-    std::shared_ptr<Texture> texture1 = resourceManager.GetTexture("Awesomeface");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -83,38 +81,32 @@ int main()
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f
     };
 
+    Model model(MODEL_PATH "/rock/rock.obj");
 
-    unsigned int VAO;
-    Buffer VBO(BufferType::Vertex, DataUsage::Static, vertices, sizeof(vertices));
+    //unsigned int VAO;
+    //Buffer VBO(BufferType::Vertex, DataUsage::Static, vertices, sizeof(vertices));
 
-    glGenVertexArrays(1, &VAO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindVertexArray(VAO);
+    //glGenVertexArrays(1, &VAO);
+    //// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    //glBindVertexArray(VAO);
 
-    VBO.Bind();
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    //VBO.Bind();
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
+    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    //glEnableVertexAttribArray(1);
+    //glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    //glEnableVertexAttribArray(2);
 
-    // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-    // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-    glBindVertexArray(0);
+    //// You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+    //// VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+    //glBindVertexArray(0);
 
-    // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-    VBO.Unbind();
+    //// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+    //VBO.Unbind();
 
     //Buffer UBO(BufferType::Uniform, DataUsage::Static, nullptr, sizeof(glm::mat4) * 3);
     //shaderProgram->BindUniformBlock("Matrices", 0);
-
-    ParamVector pm = {};
-
-    TextureVector tm = {
-        { "texture0", texture },
-        { "texture1", texture1 }
-    };
 
     Material material(MATERIAL_PATH "/cube.json", shaderProgram);
 
@@ -151,10 +143,11 @@ int main()
         material.SetMatrices(modelMatrix, viewMatrix, projectionMatrix);
         material.SetUniform(resourceManager.GetTextureMap());
 
-        glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        // glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0); // no need to unbind it every time 
+        model.Draw();
+        //glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        //// glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+        //glBindVertexArray(0); // no need to unbind it every time 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -162,8 +155,8 @@ int main()
     }
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
-    glDeleteVertexArrays(1, &VAO);
-    VBO.DeleteBuffer();
+    //glDeleteVertexArrays(1, &VAO);
+    //VBO.DeleteBuffer();
 
     //UBO.UnbindFromBindingPoint(0);
     //UBO.DeleteBuffer();
