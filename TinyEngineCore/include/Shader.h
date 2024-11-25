@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include <glm/glm.hpp>
 
 namespace TinyEngine
@@ -26,6 +27,7 @@ namespace TinyEngine
 		void SetUniform(const char* name, const glm::mat2& mat) const;
 		void SetUniform(const char* name, const glm::mat3& mat) const;
 		void SetUniform(const char* name, const glm::mat4& mat) const;
+		void SetUniform(const char* name, const std::vector<float> vec) const;
 	private:
 		std::string ShaderReader(const char* path);
 		void CheckCompileErrors(unsigned int shader, std::string type);

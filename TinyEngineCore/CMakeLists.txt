@@ -1,10 +1,10 @@
-﻿cmake_minimum_required(VERSION 3.8)
+﻿cmake_minimum_required(VERSION 3.20)
 
 # 设置项目名称
 set(PROJECT_NAME "TinyEngineCore")
 project(${PROJECT_NAME})
 
-set(CMAKE_CXX_STANDARD_REQUIRED 17)						# C++标准
+set(CMAKE_CXX_STANDARD_REQUIRED 20)						# C++标准
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)	# 可执行文件输出路径
 include_directories(${PROJECT_SOURCE_DIR}/include)		# 头文件路径
 

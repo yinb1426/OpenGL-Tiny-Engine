@@ -118,6 +118,19 @@ namespace TinyEngine
 	{
 		glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_FALSE, &mat[0][0]);
 	}
+	void Shader::SetUniform(const char* name, const std::vector<float> vec) const
+	{
+		if (vec.size() == 1)
+			SetUniform(name, vec[0]);
+		else if (vec.size() == 2)
+			SetUniform(name, vec[0], vec[1]);
+		else if (vec.size() == 3)
+			SetUniform(name, vec[0], vec[1], vec[2]);
+		else if (vec.size() == 4)
+			SetUniform(name, vec[0], vec[1], vec[2], vec[3]);
+		else
+			throw std::runtime_error("Too Much Value!");
+	}
 
 	std::string Shader::ShaderReader(const char* path)
 	{

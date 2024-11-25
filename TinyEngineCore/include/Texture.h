@@ -17,5 +17,6 @@ namespace TinyEngine
 		int width;
 		int height;
 		unsigned int ID;
+		const char* path;
 	};
 }

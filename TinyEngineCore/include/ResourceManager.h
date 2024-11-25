@@ -1,15 +1,11 @@
 #pragma once
-#include "Shader.h"
-#include "Texture.h"
+#include "Common.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
 
 namespace TinyEngine
 {
-	using ShaderMap = std::unordered_map<std::string, std::shared_ptr<Shader>>;
-	// using ModelMap = std::unordered_map<std::string, std::shared_ptr<Model>>;
-	using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture>>;
 	class ResourceManager
 	{
 	public:
@@ -30,6 +26,10 @@ namespace TinyEngine
 		const std::shared_ptr<Texture> GetTexture(std::string name)
 		{
 			return this->textures[name];
+		}
+		const TextureMap GetTextureMap()
+		{
+			return this->textures;
 		}
 	protected:
 		ShaderMap shaders;

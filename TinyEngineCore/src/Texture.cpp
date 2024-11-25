@@ -2,6 +2,7 @@
 #include "Texture.h"
 #include "stb_image.h"
 #include <iostream>
+#include <cstdlib>
 #include <glad/glad.h>
 
 namespace TinyEngine
@@ -46,6 +47,10 @@ namespace TinyEngine
 	}
 	void Texture::InitializeTexture(const char* texturePath)
 	{
+		char absolutePath[1024];
+		if(_fullpath(absolutePath, texturePath, 1024))
+			this->path = absolutePath;
+
 		stbi_set_flip_vertically_on_load(true);
 		glGenTextures(1, &this->ID);
 		glBindTexture(GL_TEXTURE_2D, this->ID);
