@@ -1,0 +1,20 @@
+{
+  "name": "cube-material",
+  "params": [
+    {
+      "name": "color0",
+      "type": "vec4",
+      "value": [ 0.5, 0.2, 0.1, 1.0 ]
+    }
+  ],
+  "textures": [
+    {
+      "name": "texture0",
+      "path": "Container"
+    },
+    {
+      "name": "texture1",
+      "path": "Awesomeface"
+    }
+  ]
+}

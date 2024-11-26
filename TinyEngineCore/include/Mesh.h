@@ -1,13 +1,16 @@
 #pragma once
+#include "Common.h"
 #include "Buffer.h"
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <vector>
 #include <string>
+#include <memory>
 #define MAX_BONE_INFLUENCE 4
 
 namespace TinyEngine
 {
+	using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture>>;
 	struct Vertex
 	{
 		glm::vec3 position;
@@ -36,8 +39,32 @@ namespace TinyEngine
 			this->textures = textures;
 			SetupMesh();
 		}
-		void Draw()
+		void Draw(std::shared_ptr<Shader> shader, TextureMap textureMap)
 		{
+			// bind appropriate textures
+			unsigned int diffuseNr = 1;
+			unsigned int specularNr = 1;
+			unsigned int normalNr = 1;
+			unsigned int heightNr = 1;
+			for (unsigned int i = 0; i < textures.size(); i++)
+			{
+				std::string number;
+				std::string type = textures[i].type;
+				if (type == "texture_diffuse")
+					number = std::to_string(diffuseNr++);
+				else if (type == "texture_specular")
+					number = std::to_string(specularNr++); // transfer unsigned int to string
+				else if (type == "texture_normal")
+					number = std::to_string(normalNr++); // transfer unsigned int to string
+				else if (type == "texture_height")
+					number = std::to_string(heightNr++); // transfer unsigned int to string
+
+				// now set the sampler to the correct texture unit
+				
+				shader->SetUniform((type + number).c_str(), (int)i);
+				textureMap[textures[i].name]->Bind(i);
+			}
+
 			glBindVertexArray(this->VAO);
 			glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);

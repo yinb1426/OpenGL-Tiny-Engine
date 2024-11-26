@@ -1,13 +1,13 @@
 ﻿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <Camera.h>
-#include <Config.h>
-#include <ResourceManager.h>
-#include <OpenGLContext.h>
-#include <StateManager.h>
-#include "Material.h"
-#include "Model.h"
+#include "Camera.h"
+#include "Config.h"
+#include "ResourceManager.h"
+#include "OpenGLContext.h"
+#include "StateManager.h"
+#include "Common.h"
+#include "Scene.h"
 
 using namespace TinyEngine;
 
@@ -28,87 +28,22 @@ int main()
     ResourceManager resourceManager;
 
     resourceManager.AddShader("Triangle Shader", std::make_shared<Shader>(SHADER_PATH "/triangle.vert.glsl", SHADER_PATH "/triangle.frag.glsl"));
-    resourceManager.AddShader("Cube Shader", std::make_shared<Shader>(SHADER_PATH "/cube.vert.glsl", SHADER_PATH "/cube.frag.glsl"));
+    resourceManager.AddShader("Rock Shader", std::make_shared<Shader>(SHADER_PATH "/rock.vert.glsl", SHADER_PATH "/rock.frag.glsl"));
     resourceManager.AddShader("Cube Shader2", std::make_shared<Shader>(SHADER_PATH "/cube2.vert.glsl", SHADER_PATH "/cube2.frag.glsl"));
     resourceManager.AddTexture("Container", std::make_shared<Texture>(TEXTURE_PATH "/container.jpg"));
     resourceManager.AddTexture("Awesomeface", std::make_shared<Texture>(TEXTURE_PATH "/awesomeface.png"));
+    resourceManager.AddModel("Rock", std::make_shared<Model>(MODEL_PATH "/rock/rock.obj"));
+    resourceManager.AddMaterial("Rock Material", std::make_shared<Material>(MATERIAL_PATH "/rock.json", resourceManager.GetShader("Rock Shader")));
 
-    std::shared_ptr<Shader> shaderProgram = resourceManager.GetShader("Cube Shader2");
+    std::shared_ptr<Material> material = resourceManager.GetMaterial("Rock Material");
+    std::shared_ptr<Model> model = resourceManager.GetModel("Rock");
 
-    // set up vertex data (and buffer(s)) and configure vertex attributes
-    // ------------------------------------------------------------------
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, 
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, 
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f
-    };
-
-    Model model(MODEL_PATH "/rock/rock.obj");
-
-    //unsigned int VAO;
-    //Buffer VBO(BufferType::Vertex, DataUsage::Static, vertices, sizeof(vertices));
-
-    //glGenVertexArrays(1, &VAO);
-    //// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    //glBindVertexArray(VAO);
-
-    //VBO.Bind();
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    //glEnableVertexAttribArray(0);
-    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    //glEnableVertexAttribArray(1);
-    //glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    //glEnableVertexAttribArray(2);
-
-    //// You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-    //// VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-    //glBindVertexArray(0);
-
-    //// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-    //VBO.Unbind();
-
-    //Buffer UBO(BufferType::Uniform, DataUsage::Static, nullptr, sizeof(glm::mat4) * 3);
-    //shaderProgram->BindUniformBlock("Matrices", 0);
-
-    Material material(MATERIAL_PATH "/cube.json", shaderProgram);
+    std::shared_ptr<Scene> scene = std::make_shared<Scene>(camera);
+    scene->AddGameObject("rock", {
+        model,
+        Transform(glm::vec3(1.0f, 0.0f, 0.0f)),
+        material
+    });
 
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -126,44 +61,22 @@ int main()
         // render
         // ------
         stateManager.ClearPerFrame(0.2f, 0.3f, 0.3f, 1.0f);
-
+        
         // draw our first triangle
-        // shaderProgram->Use();
-        glm::mat4 modelMatrix = glm::mat4(1.0f);
-        glm::mat4 viewMatrix = camera.GetViewMatrix();
-        glm::mat4 projectionMatrix = camera.GetProjectionMtarix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+        //glm::mat4 modelMatrix = transform.GetModelMatrix(); // glm::mat4(1.0f);
+        //glm::mat4 viewMatrix = camera.GetViewMatrix();
+        //glm::mat4 projectionMatrix = camera.GetProjectionMtarix((float)SCR_WIDTH / (float)SCR_HEIGHT);
 
-        //UBO.UpdateBuffer(&modelMatrix[0][0], sizeof(glm::mat4), 0);
-        //UBO.UpdateBuffer(&viewMatrix[0][0], sizeof(glm::mat4), sizeof(glm::mat4));
-        //UBO.UpdateBuffer(&projectionMatrix[0][0], sizeof(glm::mat4), 2 * sizeof(glm::mat4));
-
-        //UBO.BindToBindingPoint(0);
-        //shaderProgram->SetUniform("texture0", 0);
-        //texture->Bind(0);
-        material.SetMatrices(modelMatrix, viewMatrix, projectionMatrix);
-        material.SetUniform(resourceManager.GetTextureMap());
-
-        model.Draw();
-        //glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
-        //// glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
-        //glBindVertexArray(0); // no need to unbind it every time 
+        //material->SetMatrices(modelMatrix, viewMatrix, projectionMatrix);
+        //material->SetUniform(resourceManager.GetTextureMap());
+        //model->Draw(material->GetShader(), resourceManager.GetTextureMap());
+        std::cout << context.GetWindowAspect() << std::endl;
+        scene->Render(context.GetWindowAspect(), resourceManager.GetTextureMap());
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         context.SwapBuffersAndPollEvents();
     }
-    // optional: de-allocate all resources once they've outlived their purpose:
-    // ------------------------------------------------------------------------
-    //glDeleteVertexArrays(1, &VAO);
-    //VBO.DeleteBuffer();
-
-    //UBO.UnbindFromBindingPoint(0);
-    //UBO.DeleteBuffer();
-    // shaderProgram->Destroy();
-
-    // glfw: terminate, clearing all previously allocated GLFW resources.
-    // ------------------------------------------------------------------
     return 0;
 }
 
@@ -174,6 +87,3 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 }
-
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------

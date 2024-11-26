@@ -65,6 +65,12 @@ namespace TinyEngine
 		{
 			return this->window;
 		}
+		float GetWindowAspect() const
+		{
+			int width = 1, height = 1;
+			glfwGetWindowSize(this->window, &width, &height);
+			return (float)width / (float)height;
+		}
 
 	private:
 		static void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
@@ -72,8 +78,6 @@ namespace TinyEngine
 			glViewport(0, 0, width, height);
 		}
 	private:
-		unsigned int width;
-		unsigned int height;
 		GLFWwindow* window;
 	};
 }

@@ -3,28 +3,25 @@
 #include <string>
 #include <memory>
 #include <fstream>
+#include <iostream>
 #include <glm/glm.hpp>
 #include <nlohmann/json.hpp>
 #include "Common.h"
-#include <iostream>
 
-using Json = nlohmann::json;
 namespace TinyEngine
 {
-	using ParamVector = std::vector<std::pair<std::string, float>>;
-	using TextureVector = std::vector<std::pair<std::string, std::shared_ptr<Texture>>>;
-
-	//  π”√json£ø
+	using Json = nlohmann::json;
+	using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture>>;
 	class Material
 	{
 	public:
-		Material(const char* jsonPath, std::shared_ptr<Shader>& shader)
+		Material(const char* jsonPath, std::shared_ptr<Shader> shader)
 		{
 			std::ifstream paramsFile(jsonPath, std::ios::in);
 			this->paramsJson = Json::parse(paramsFile);
 			std::string materialName = this->paramsJson["name"].get<std::string>();
 			this->name = materialName.c_str();
-			this->shader = std::move(shader);
+			this->shader = shader;
 		}
 		~Material() {}
 		void SetMatrices(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
@@ -67,8 +64,10 @@ namespace TinyEngine
 				curTexture->Bind(curIndex++);
 			}
 		}
-	private:
-
+		const std::shared_ptr<Shader> GetShader()
+		{
+			return this->shader;
+		}
 	private:
 		const char* name;
 		std::shared_ptr<Shader> shader;

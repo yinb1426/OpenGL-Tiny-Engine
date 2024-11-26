@@ -5,10 +5,12 @@
 #include <assimp/postprocess.h>
 #include <vector>
 #include <string>
+#include <memory>
 #include <iostream>
 using namespace std;
 namespace TinyEngine
 {
+	using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture>>;
 	class Model
 	{
 	public:
@@ -16,13 +18,20 @@ namespace TinyEngine
 		{
 			LoadModel(path);
 		}
+
 		~Model() {}
-		void Draw()
+
+		void Draw(std::shared_ptr<Shader> shader, TextureMap textures)
 		{
 			for (auto& mesh : meshes)
 			{
-				mesh.Draw();
+				mesh.Draw(shader, textures);
 			}
+		}
+
+		std::vector<MeshTexture> GetLoadedTextures() const
+		{
+			return this->loadedTextures;
 		}
 	private:
 		void LoadModel(const char* path)

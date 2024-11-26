@@ -13,6 +13,7 @@ namespace TinyEngine
 	const float DEFAULT_ZNEAR = 0.1f;
 	const float DEFAULT_ZFAR = 100.0f;
 	const float DEFAULT_FOV = 45.0f;
+	const float MAX_ABS_PITCH = 89.5f;
 
 	class Camera
 	{
@@ -23,6 +24,8 @@ namespace TinyEngine
 			this->front = DEFAULT_FRONT;
 			this->worldUp = up;
 			this->yaw = yaw;
+			if (pitch > MAX_ABS_PITCH) pitch = MAX_ABS_PITCH;
+			else if (pitch < -MAX_ABS_PITCH) pitch = -MAX_ABS_PITCH;
 			this->pitch = pitch;
 			this->zNear = DEFAULT_ZNEAR;
 			this->zFar = DEFAULT_ZFAR;
@@ -35,6 +38,8 @@ namespace TinyEngine
 			this->front = DEFAULT_FRONT;
 			this->worldUp = glm::vec3(upX, upY, upZ);
 			this->yaw = yaw;
+			if (pitch > MAX_ABS_PITCH) pitch = MAX_ABS_PITCH;
+			else if (pitch < -MAX_ABS_PITCH) pitch = -MAX_ABS_PITCH;
 			this->pitch = pitch;
 			this->zNear = DEFAULT_ZNEAR;
 			this->zFar = DEFAULT_ZFAR;
@@ -42,10 +47,43 @@ namespace TinyEngine
 			UpdateCameraVectors();
 		}
 		~Camera() {}
-		glm::mat4 GetViewMatrix() const;
-		glm::mat4 GetProjectionMtarix(const float aspect) const;
+		void UpdateCameraPosition(glm::vec3 newPos)
+		{
+			this->position = newPos;
+			UpdateCameraVectors();
+		}
+		void UpdateCameraYaw(float newYaw)
+		{
+			this->yaw = newYaw;
+			UpdateCameraVectors();
+		}
+		void UpdateCameraPitch(float newPitch)
+		{
+			if (pitch > MAX_ABS_PITCH) pitch = MAX_ABS_PITCH;
+			else if (pitch < -MAX_ABS_PITCH) pitch = -MAX_ABS_PITCH;
+			this->pitch = pitch;
+			UpdateCameraVectors();
+		}
+		glm::mat4 GetViewMatrix() const
+		{
+			return glm::lookAt(this->position, this->position + this->front, this->up);
+		}
+		glm::mat4 GetProjectionMtarix(const float aspect) const
+		{
+			return glm::perspective(glm::radians(this->fov), aspect, this->zNear, this->zFar);
+		}
+
 	private:
-		void UpdateCameraVectors();
+		void UpdateCameraVectors()
+		{
+			glm::vec3 tmpFront{};
+			tmpFront.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
+			tmpFront.y = sin(glm::radians(this->pitch));
+			tmpFront.z = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
+			this->front = glm::normalize(tmpFront);
+			this->right = glm::normalize(glm::cross(this->front, this->worldUp));
+			this->up = glm::normalize(glm::cross(this->right, this->front));
+		}
 	private:
 		glm::vec3 position;
 		glm::vec3 front;
