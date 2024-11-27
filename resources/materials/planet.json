@@ -1,9 +1,9 @@
 {
-  "name": "planet-material",
+  "name": "rock-material",
   "textures": [
     {
       "name": "texture_diffuse1",
-      "path": "planet_Quom1200"
+      "path": "Rock-Texture-Surface"
     }
   ]
 }

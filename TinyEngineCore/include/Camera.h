@@ -59,10 +59,18 @@ namespace TinyEngine
 		}
 		void UpdateCameraPitch(float newPitch)
 		{
-			if (pitch > MAX_ABS_PITCH) pitch = MAX_ABS_PITCH;
-			else if (pitch < -MAX_ABS_PITCH) pitch = -MAX_ABS_PITCH;
-			this->pitch = pitch;
+			if (newPitch > MAX_ABS_PITCH) newPitch = MAX_ABS_PITCH;
+			else if (newPitch < -MAX_ABS_PITCH) newPitch = -MAX_ABS_PITCH;
+			this->pitch = newPitch;
 			UpdateCameraVectors();
+		}
+		void UpdateCameraNearPlane(float zNear)
+		{
+			this->zNear = zNear;
+		}
+		void UpdateCameraFarPlane(float zFar)
+		{
+			this->zFar = zFar;
 		}
 		glm::mat4 GetViewMatrix() const
 		{

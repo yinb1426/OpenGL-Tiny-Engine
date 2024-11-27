@@ -16,10 +16,13 @@ namespace TinyEngine
 			glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), scale);
 
 			//rotate
-			glm::mat4 rotationMatrix = glm::mat4_cast(glm::quat(glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f)) *
-													  glm::quat(glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f)) *
-													  glm::quat(glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f)));
-			
+			//glm::mat4 rotationMatrix = glm::mat4_cast(glm::quat(glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f)) *
+			//										  glm::quat(glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f)) *
+			//										  glm::quat(glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f)));
+			glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+			rotationMatrix = glm::rotate(rotationMatrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+			rotationMatrix = glm::rotate(rotationMatrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
 			//translate
 			glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), position);
 			return translationMatrix * rotationMatrix * scaleMatrix;

@@ -1,6 +1,5 @@
 #pragma once
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "OpenGLWindow.h"
 #include <iostream>
 namespace TinyEngine
 {
@@ -26,16 +25,10 @@ namespace TinyEngine
 #ifdef __APPLE__
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-
-			// glfw window creation
-			this->window = glfwCreateWindow(width, height, title, NULL, NULL);
-			if (this->window == NULL)
-			{
-				glfwTerminate();
-				throw std::runtime_error("Failed to create GLFW window");
-			}
-			glfwMakeContextCurrent(window);
-			glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
+			this->window = std::make_unique<OpenGLWindow>(width, height, title);
+			
+			glfwMakeContextCurrent(window->GetWindow());
+			glfwSetFramebufferSizeCallback(window->GetWindow(), FramebufferSizeCallback);
 
 			// glad: load all OpenGL function pointers
 			if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -43,32 +36,32 @@ namespace TinyEngine
 		}
 		void MakeCurrent()
 		{
-			glfwMakeContextCurrent(this->window);
+			glfwMakeContextCurrent(window->GetWindow());
 		}
 		bool ShouldClose()
 		{
-			return glfwWindowShouldClose(this->window);
+			return glfwWindowShouldClose(window->GetWindow());
 		}
 		void SwapBuffersAndPollEvents()
 		{
-			glfwSwapBuffers(this->window);
+			glfwSwapBuffers(window->GetWindow());
 			glfwPollEvents();
 		}
 		void Shutdown()
 		{
-			if (this->window != nullptr)
-				glfwDestroyWindow(this->window);
+			if (window->GetWindow() != nullptr)
+				glfwDestroyWindow(window->GetWindow());
 			glfwTerminate();
 			std::cout << "Context Destroyed!" << std::endl;
 		}
-		GLFWwindow* GetWindow() const
+		GLFWwindow* GetWindow()
 		{
-			return this->window;
+			return window->GetWindow();
 		}
-		float GetWindowAspect() const
+		float GetWindowAspect()
 		{
 			int width = 1, height = 1;
-			glfwGetWindowSize(this->window, &width, &height);
+			glfwGetWindowSize(window->GetWindow(), &width, &height);
 			return (float)width / (float)height;
 		}
 
@@ -78,6 +71,6 @@ namespace TinyEngine
 			glViewport(0, 0, width, height);
 		}
 	private:
-		GLFWwindow* window;
+		std::unique_ptr<OpenGLWindow> window;
 	};
 }

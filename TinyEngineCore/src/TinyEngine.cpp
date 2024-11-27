@@ -1,13 +1,4 @@
-﻿#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
-#include "Camera.h"
-#include "Config.h"
-#include "ResourceManager.h"
-#include "OpenGLContext.h"
-#include "StateManager.h"
-#include "Common.h"
-#include "Scene.h"
+﻿#include "Application.h"
 
 using namespace TinyEngine;
 
@@ -19,6 +10,11 @@ const unsigned int SCR_HEIGHT = 600;
 
 int main()
 {
+    auto application = std::make_unique<Application>(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL");
+    application->Loop();
+
+    return 0;
+    /*
     Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
     // glfw: initialize and configure
@@ -70,7 +66,6 @@ int main()
         //material->SetMatrices(modelMatrix, viewMatrix, projectionMatrix);
         //material->SetUniform(resourceManager.GetTextureMap());
         //model->Draw(material->GetShader(), resourceManager.GetTextureMap());
-        std::cout << context.GetWindowAspect() << std::endl;
         scene->Render(context.GetWindowAspect(), resourceManager.GetTextureMap());
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -78,6 +73,7 @@ int main()
         context.SwapBuffersAndPollEvents();
     }
     return 0;
+    */
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly

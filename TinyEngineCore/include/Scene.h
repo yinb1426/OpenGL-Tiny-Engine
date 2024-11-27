@@ -28,9 +28,14 @@ namespace TinyEngine
 	class Scene
 	{
 	public:
+		Scene() : camera(Camera()) {}
 		Scene(Camera camera) : camera(camera) {}
 		Scene(Camera camera, GameObjectMap gameObjects) : camera(camera), gameObjects(gameObjects) {}
 		~Scene() {}
+		void SetCamera(Camera camera)
+		{
+			this->camera = camera;
+		}
 		void AddGameObject(std::string name, GameObject go)
 		{
 			if (this->gameObjects.find(name) == this->gameObjects.end())
