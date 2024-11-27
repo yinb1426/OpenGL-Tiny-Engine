@@ -1,11 +1,7 @@
 #pragma once
 #include <iostream>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <imgui/imgui.h>
-#include <imgui/backends/imgui_impl_glfw.h>
-#include <imgui/backends/imgui_impl_opengl3.h>
 #include "OpenGLContext.h"
+#include "UIContext.h"
 #include "ResourceManager.h"
 #include "StateManager.h"
 #include "Config.h"
@@ -19,68 +15,39 @@ namespace TinyEngine
 	public:
 		Application(unsigned int width, unsigned int height, const char* title)
 		{
-			context = std::make_unique<OpenGLContext>(width, height, title);
+			glContext = std::make_unique<OpenGLContext>(width, height, title);
 			resourceManager = std::make_unique<ResourceManager>();
 			stateManager = std::make_unique<StateManager>();
 			scene = std::make_unique<Scene>();
+			uiContext = std::make_unique<UIContext>(glContext->GetWindow());
 
-			// Initialize Resources
+			// Initialize Resources and Scene
 			InitializeResourceManager();
 			InitializeScene();
-
-			// Test: Init imgui
-			IMGUI_CHECKVERSION();
-			ImGui::CreateContext();
-			ImGuiIO& io = ImGui::GetIO(); (void)io;
-			io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-
-			ImGui::StyleColorsDark();
-			ImGui_ImplGlfw_InitForOpenGL(context->GetWindow(), true);
-			ImGui_ImplOpenGL3_Init("#version 430 core");
 		}
 		
 		static Application& GetInstance() { return *sInstance; }
 
 		void Loop()
 		{
-			ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-			while (!context->ShouldClose())
+			while (!glContext->ShouldClose())
 			{
-				// input
+				// state update
 				stateManager->Enable(GL_DEPTH_TEST);
 
 				// render
-				stateManager->ClearPerFrame(clear_color.x, clear_color.y, clear_color.z, 1.0f);
-				scene->Render(context->GetWindowAspect(), resourceManager->GetTextureMap());
-				
-				// Test: Imgui window
-				// Draw Ingui Window "Hello World"
-				ImGui_ImplOpenGL3_NewFrame();
-				ImGui_ImplGlfw_NewFrame();
-				ImGui::NewFrame();
+				stateManager->ClearPerFrame();
+				scene->Render(glContext->GetWindowAspect(), resourceManager->GetTextureMap());
+				uiContext->Render(stateManager.get(), scene->camera);
 
-				static float f = 0.0f;
-				ImGui::Begin("Hello World");                          // Create a window called "Hello, world!" and append into it.
-
-				ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-
-				ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-				ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-				ImGui::SameLine();
-
-				ImGui::End();
-
-				// Render All windows
-				ImGui::Render();
-				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-				context->SwapBuffersAndPollEvents();
+				glContext->SwapBuffersAndPollEvents();
 			}
+		}
 
-			// Destroy Imgui
-			ImGui_ImplOpenGL3_Shutdown();
-			ImGui_ImplGlfw_Shutdown();
-			ImGui::DestroyContext();
+		void Destroy()
+		{
+			uiContext->DestroyUIContext();
+			glContext->Shutdown();
 		}
 	private:
 		void InitializeResourceManager()
@@ -113,40 +80,41 @@ namespace TinyEngine
 				planetMaterial
 			});
 
-			//// rocks
-			//std::shared_ptr<Material> rockMaterial = resourceManager->GetMaterial("Rock Material");
-			//std::shared_ptr<Model> rockModel = resourceManager->GetModel("Rock");
-			//unsigned int amount = 10000;
-			//float radius = 50.0f;
-			//float offset = 2.5f;
-			//for (unsigned int i = 0; i < amount; i++)
-			//{
-			//	// translate
-			//	float angle = (float)i / (float)amount * 360.0f;
-			//	float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-			//	float x = sin(angle) * radius + displacement;
-			//	displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-			//	float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
-			//	displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-			//	float z = cos(angle) * radius + displacement;
-			//	glm::vec3 tv = glm::vec3(x, y, z);
-			//	// scale
-			//	float scale = static_cast<float>((rand() % 20) / 100.0 + 0.05);
-			//	glm::vec3 sv = glm::vec3(scale);
-			//	// rotation
-			//	glm::vec3 rv = glm::vec3(static_cast<float>(rand() % 360), static_cast<float>(rand() % 360), static_cast<float>(rand() % 360));	
+			// rocks
+			std::shared_ptr<Material> rockMaterial = resourceManager->GetMaterial("Rock Material");
+			std::shared_ptr<Model> rockModel = resourceManager->GetModel("Rock");
+			unsigned int amount = 1000;
+			float radius = 50.0f;
+			float offset = 2.5f;
+			for (unsigned int i = 0; i < amount; i++)
+			{
+				// translate
+				float angle = (float)i / (float)amount * 360.0f;
+				float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+				float x = sin(angle) * radius + displacement;
+				displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+				float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
+				displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+				float z = cos(angle) * radius + displacement;
+				glm::vec3 tv = glm::vec3(x, y, z);
+				// scale
+				float scale = static_cast<float>((rand() % 20) / 25.0 + 0.05);
+				glm::vec3 sv = glm::vec3(scale);
+				// rotation
+				glm::vec3 rv = glm::vec3(static_cast<float>(rand() % 360), static_cast<float>(rand() % 360), static_cast<float>(rand() % 360));	
 
-			//	scene->AddGameObject("rock" + std::to_string(i), {
-			//		rockModel,
-			//		Transform(tv, rv, sv),
-			//		rockMaterial
-			//	});
-			//}
+				scene->AddGameObject("rock" + std::to_string(i), {
+					rockModel,
+					Transform(tv, rv, sv),
+					rockMaterial
+				});
+			}
 
 		}
 	private:
 		static Application* sInstance;
-		std::unique_ptr<OpenGLContext> context;
+		std::unique_ptr<OpenGLContext> glContext;
+		std::unique_ptr<UIContext> uiContext;
 		std::unique_ptr<ResourceManager> resourceManager;
 		std::unique_ptr<StateManager> stateManager;
 		std::unique_ptr<Scene> scene;

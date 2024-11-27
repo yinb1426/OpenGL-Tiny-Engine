@@ -80,7 +80,15 @@ namespace TinyEngine
 		{
 			return glm::perspective(glm::radians(this->fov), aspect, this->zNear, this->zFar);
 		}
-
+		void UpdateCameraParams(glm::vec3 position, float pitch, float yaw, float zNear, float zFar)
+		{
+			this->position = position;
+			this->pitch = pitch;
+			this->yaw = yaw;
+			this->zNear = zNear;
+			this->zFar = zFar;
+			UpdateCameraVectors();
+		}
 	private:
 		void UpdateCameraVectors()
 		{
@@ -92,16 +100,17 @@ namespace TinyEngine
 			this->right = glm::normalize(glm::cross(this->front, this->worldUp));
 			this->up = glm::normalize(glm::cross(this->right, this->front));
 		}
-	private:
+	public:
 		glm::vec3 position;
-		glm::vec3 front;
-		glm::vec3 up;
-		glm::vec3 right;
-		glm::vec3 worldUp;
 		float yaw; // º½Ïò½Ç(×óÓÒ)
 		float pitch; // ¸©Ñö½Ç(ÉÏÏÂ)
 		float zNear;
 		float zFar;
 		float fov;
+	private:
+		glm::vec3 front;
+		glm::vec3 up;
+		glm::vec3 right;
+		glm::vec3 worldUp;
 	};
 }

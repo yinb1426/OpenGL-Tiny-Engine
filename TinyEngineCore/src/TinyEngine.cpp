@@ -12,7 +12,7 @@ int main()
 {
     auto application = std::make_unique<Application>(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL");
     application->Loop();
-
+    application->Destroy();
     return 0;
     /*
     Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));

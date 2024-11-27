@@ -36,6 +36,10 @@ namespace TinyEngine
 		{
 			this->camera = std::make_shared<Camera>(camera);
 		}
+		std::shared_ptr<Camera> GetCamera() const
+		{
+			return this->camera;
+		}
 		void AddGameObject(std::string name, GameObject go)
 		{
 			if (this->gameObjects.find(name) == this->gameObjects.end())

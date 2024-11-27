@@ -19,9 +19,9 @@ namespace TinyEngine
 	public:
 		StateManager() { currentState = OpenGLState(); }
 		~StateManager() { std::cout << "StateManager Destroyed!" << std::endl; }
-		void ClearPerFrame(float red, float green, float blue, float alpha)
+		void ClearPerFrame()
 		{
-			glClearColor(red, green, blue, alpha);
+			glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		}
 
@@ -55,6 +55,15 @@ namespace TinyEngine
 		{
 			return this->currentState;
 		}
+		glm::vec4 GetBackgroundColor() const
+		{
+			return this->backgroundColor;
+		}
+		void SetBackgroundColor(glm::vec4 backgroundColor) 
+		{
+			this->backgroundColor = backgroundColor;
+		}
+
 		void Reset()
 		{
 			for (auto& capability : this->currentState.capabilities)
@@ -66,5 +75,6 @@ namespace TinyEngine
 
 	private:
 		OpenGLState currentState;
+		glm::vec4 backgroundColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 	};
 }
