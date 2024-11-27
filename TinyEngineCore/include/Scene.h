@@ -28,13 +28,13 @@ namespace TinyEngine
 	class Scene
 	{
 	public:
-		Scene() : camera(Camera()) {}
-		Scene(Camera camera) : camera(camera) {}
-		Scene(Camera camera, GameObjectMap gameObjects) : camera(camera), gameObjects(gameObjects) {}
+		Scene() : camera(std::make_shared<Camera>()) {}
+		Scene(Camera camera) : camera(std::make_shared<Camera>(camera)) {}
+		Scene(Camera camera, GameObjectMap gameObjects) : camera(std::make_shared<Camera>(camera)), gameObjects(gameObjects) {}
 		~Scene() {}
 		void SetCamera(Camera camera)
 		{
-			this->camera = camera;
+			this->camera = std::make_shared<Camera>(camera);
 		}
 		void AddGameObject(std::string name, GameObject go)
 		{
@@ -51,11 +51,11 @@ namespace TinyEngine
 		{
 			for (auto& go : gameObjects)
 			{
-				go.second.Render(camera, windowAspect, textures);
+				go.second.Render(*camera, windowAspect, textures);
 			}
 		}
 	public:
-		Camera camera;
+		std::shared_ptr<Camera> camera;
 		GameObjectMap gameObjects;
 	};
 }
