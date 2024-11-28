@@ -28,7 +28,8 @@ namespace TinyEngine
 			this->window = std::make_unique<OpenGLWindow>(width, height, title);
 			
 			glfwMakeContextCurrent(window->GetWindow());
-			glfwSetFramebufferSizeCallback(window->GetWindow(), FramebufferSizeCallback);
+			glfwSetFramebufferSizeCallback(window->GetWindow(), OnFramebufferSizeCallback);
+			glfwSetScrollCallback(window->GetWindow(), OnScrollCallBack);
 
 			// glad: load all OpenGL function pointers
 			if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -64,11 +65,15 @@ namespace TinyEngine
 			glfwGetWindowSize(window->GetWindow(), &width, &height);
 			return (float)width / (float)height;
 		}
-
 	private:
-		static void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
+		static void OnFramebufferSizeCallback(GLFWwindow* window, int width, int height)
 		{
 			glViewport(0, 0, width, height);
+		}
+		static void OnScrollCallBack(GLFWwindow* window, double xoffset, double yoffset)
+		{
+			glfwGetWindowUserPointer(window);
+			std::cout << yoffset << std::endl;
 		}
 	private:
 		std::unique_ptr<OpenGLWindow> window;
