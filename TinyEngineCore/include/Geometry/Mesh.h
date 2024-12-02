@@ -1,6 +1,5 @@
 #pragma once
-#include "Common.h"
-#include "Buffer.h"
+#include "Graphics/Buffer.h"
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <vector>

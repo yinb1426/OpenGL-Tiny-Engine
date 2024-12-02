@@ -1,5 +1,5 @@
 #pragma once
-#include "Mesh.h"
+#include "Geometry/Mesh.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -21,11 +21,11 @@ namespace TinyEngine
 
 		~Model() {}
 
-		void Draw(std::shared_ptr<Shader> shader, TextureMap textures)
+		void Draw(std::shared_ptr<Shader> shader, TextureMap textureMap)
 		{
 			for (auto& mesh : meshes)
 			{
-				mesh.Draw(shader, textures);
+				mesh.Draw(shader, textureMap);
 			}
 		}
 

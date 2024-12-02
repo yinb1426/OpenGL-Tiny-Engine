@@ -1,16 +1,21 @@
 #pragma once
+#include "Manager/StateManager.h"
+#include "Graphics/Camera.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <imgui/imgui.h>
 #include <imgui/backends/imgui_impl_glfw.h>
 #include <imgui/backends/imgui_impl_opengl3.h>
-#include "StateManager.h"
-#include "Camera.h"
+
 namespace TinyEngine
 {
 	class UIContext
 	{
 	public:
+		UIContext()
+		{
+			InitializeUIContext(gGLContext->GetWindow());
+		}
 		UIContext(GLFWwindow* window)
 		{
 			InitializeUIContext(window);
@@ -27,7 +32,7 @@ namespace TinyEngine
 			ImGui_ImplOpenGL3_Init("#version 430 core");
 		}
 
-		void Render(StateManager* stateManager, std::shared_ptr<Camera> sceneCamera)
+		void Render(std::shared_ptr<Camera> sceneCamera)
 		{
 			// Initialize ImGui
 			ImGui_ImplOpenGL3_NewFrame();
@@ -35,7 +40,7 @@ namespace TinyEngine
 			ImGui::NewFrame();
 
 			// Get data needed to be updated
-			glm::vec4 curBackgroungColor = stateManager->GetBackgroundColor();
+			glm::vec4 curBackgroungColor = gStateManager->GetBackgroundColor();
 			glm::vec3 curCamPos = sceneCamera->position;
 			float curCamPitch = sceneCamera->pitch;
 			float curCamYaw = sceneCamera->yaw;
@@ -60,7 +65,7 @@ namespace TinyEngine
 			ImGui::End();
 
 			// Update data
-			stateManager->SetBackgroundColor(curBackgroungColor);
+			gStateManager->SetBackgroundColor(curBackgroungColor);
 			sceneCamera->UpdateCameraParams(curCamPos, curCamPitch, curCamYaw, curCamZNear, curCamZFar);
 
 			// Render UI
@@ -75,4 +80,6 @@ namespace TinyEngine
 			ImGui::DestroyContext();
 		}
 	};
+
+	extern std::unique_ptr<UIContext> gUIContext;
 }

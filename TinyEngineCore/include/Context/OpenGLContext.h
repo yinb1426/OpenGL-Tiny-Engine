@@ -78,4 +78,6 @@ namespace TinyEngine
 	private:
 		std::unique_ptr<OpenGLWindow> window;
 	};
+
+	extern std::unique_ptr<OpenGLContext> gGLContext;
 }

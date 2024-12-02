@@ -1,4 +1,6 @@
 #pragma once
+#include "Graphics/Shader.h"
+#include "Graphics/Texture.h"
 #include <vector>
 #include <string>
 #include <memory>
@@ -6,7 +8,6 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include <nlohmann/json.hpp>
-#include "Common.h"
 
 namespace TinyEngine
 {

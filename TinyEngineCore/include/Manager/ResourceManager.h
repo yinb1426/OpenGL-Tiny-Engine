@@ -1,8 +1,12 @@
 #pragma once
+#include "Graphics/Shader.h"
+#include "Graphics/Material.h"
+#include "Geometry/Model.h"
+#include "Graphics/Texture.h"
+
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include "Common.h"
 
 namespace TinyEngine
 {
@@ -10,6 +14,7 @@ namespace TinyEngine
 	using MaterialMap = std::unordered_map<std::string, std::shared_ptr<Material>>;
 	using ModelMap = std::unordered_map<std::string, std::shared_ptr<Model>>;
 	using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture>>;
+
 	class ResourceManager
 	{
 	public:
@@ -62,4 +67,6 @@ namespace TinyEngine
 		ModelMap models;
 		TextureMap textures;
 	};
+
+	extern std::unique_ptr<ResourceManager> gResourceManager;
 }

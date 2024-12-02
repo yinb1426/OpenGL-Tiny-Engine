@@ -14,7 +14,7 @@ namespace TinyEngine
 		{
 			scenes.clear();
 			activeSceneName = "";
-			std::cout << "Scene Manager Destroyed!" << std::endl;
+			std::cout << "SceneManager Destroyed!" << std::endl;
 		}
 		void AddScene(std::string name, std::shared_ptr<Scene>& scene)
 		{
@@ -31,12 +31,14 @@ namespace TinyEngine
 		{
 			return scenes[activeSceneName]->GetCamera();
 		}
-		void Render(float windowAspect, TextureMap textures)
+		void Render()
 		{
-			scenes[activeSceneName]->Render(windowAspect, textures);
+			scenes[activeSceneName]->Render();
 		}
 	private:
 		std::unordered_map<std::string, std::shared_ptr<Scene>> scenes;
 		std::string activeSceneName;
 	};
+
+	extern std::unique_ptr<SceneManager> gSceneManager;
 }

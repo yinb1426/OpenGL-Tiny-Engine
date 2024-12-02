@@ -1,11 +1,12 @@
 #pragma once
-#include "Model.h"
-#include "Material.h"
-#include "Transform.h"
-#include "Camera.h"
+#include "Geometry/Model.h"
+#include "Geometry/Transform.h"
+#include "Graphics/Material.h"
+#include "Graphics/Camera.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
+
 namespace TinyEngine
 {
 	struct GameObject
@@ -14,14 +15,14 @@ namespace TinyEngine
 		Transform transform;
 		std::shared_ptr<Material> material;
 
-		void Render(Camera camera, float windowAspect, TextureMap textureMap)
+		void Render(Camera camera)
 		{
 			glm::mat4 modelMatrix = transform.GetModelMatrix();
 			glm::mat4 viewMatrix = camera.GetViewMatrix();
-			glm::mat4 projectionMatrix = camera.GetProjectionMtarix(windowAspect);
+			glm::mat4 projectionMatrix = camera.GetProjectionMtarix(gGLContext->GetWindowAspect());
 			material->SetMatrices(modelMatrix, viewMatrix, projectionMatrix);
-			material->SetUniform(textureMap);
-			model->Draw(material->GetShader(), textureMap);
+			material->SetUniform(gResourceManager->GetTextureMap());
+			model->Draw(material->GetShader(), gResourceManager->GetTextureMap());
 		}
 	};
 	using GameObjectMap = std::unordered_map<std::string, GameObject>;
@@ -55,11 +56,11 @@ namespace TinyEngine
 			if (this->gameObjects.find(name) != this->gameObjects.end())
 				this->gameObjects.erase(name);
 		}
-		void Render(float windowAspect, TextureMap textures)  //windowAspect/textures应该怎么出去
+		void Render()  //windowAspect/textures应该怎么出去
 		{
 			for (auto& go : gameObjects)
 			{
-				go.second.Render(*camera, windowAspect, textures);
+				go.second.Render(*camera);
 			}
 		}
 	public:
