@@ -6,8 +6,7 @@
 #include "StateManager.h"
 #include "Config.h"
 #include "Common.h"
-#include "Scene.h"
-
+#include "SceneManager.h"
 namespace TinyEngine 
 {
 	class Application
@@ -18,7 +17,7 @@ namespace TinyEngine
 			glContext = std::make_unique<OpenGLContext>(width, height, title);
 			resourceManager = std::make_unique<ResourceManager>();
 			stateManager = std::make_unique<StateManager>();
-			scene = std::make_unique<Scene>();
+			sceneManager = std::make_unique<SceneManager>();
 			uiContext = std::make_unique<UIContext>(glContext->GetWindow());
 
 			// Initialize Resources and Scene
@@ -37,9 +36,10 @@ namespace TinyEngine
 
 				// render
 				stateManager->ClearPerFrame();
-				scene->Render(glContext->GetWindowAspect(), resourceManager->GetTextureMap());
-				uiContext->Render(stateManager.get(), scene->camera);
+				sceneManager->Render(glContext->GetWindowAspect(), resourceManager->GetTextureMap());
+				uiContext->Render(stateManager.get(), sceneManager->GetActiveSceneCamera());
 
+				// Swap Buffer and Poll Event
 				glContext->SwapBuffersAndPollEvents();
 			}
 		}
@@ -65,6 +65,8 @@ namespace TinyEngine
 		}
 		void InitializeScene()
 		{
+			std::shared_ptr<Scene> scene = std::make_shared<Scene>();
+
 			Camera camera(glm::vec3(20.0f, 20.0f, 110.0f));
 			camera.UpdateCameraYaw(-101.0f);
 			camera.UpdateCameraPitch(-15.0f);
@@ -110,6 +112,8 @@ namespace TinyEngine
 				});
 			}
 
+			sceneManager->AddScene("Planet Scene", scene);
+			sceneManager->SetActiveScene("Planet Scene");
 		}
 	private:
 		static Application* sInstance;
@@ -117,6 +121,6 @@ namespace TinyEngine
 		std::unique_ptr<UIContext> uiContext;
 		std::unique_ptr<ResourceManager> resourceManager;
 		std::unique_ptr<StateManager> stateManager;
-		std::unique_ptr<Scene> scene;
+		std::unique_ptr<SceneManager> sceneManager;
 	};
 }

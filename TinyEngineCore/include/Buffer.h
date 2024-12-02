@@ -1,4 +1,5 @@
 #include <glad/glad.h>
+#include <stdexcept>
 namespace TinyEngine
 {
 	enum class BufferType

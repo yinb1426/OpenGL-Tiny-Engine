@@ -36,6 +36,10 @@ namespace TinyEngine
 		{
 			this->camera = std::make_shared<Camera>(camera);
 		}
+		void SetCamera(std::shared_ptr<Camera>& camera)
+		{
+			this->camera = std::move(camera);
+		}
 		std::shared_ptr<Camera> GetCamera() const
 		{
 			return this->camera;
