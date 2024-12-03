@@ -25,7 +25,6 @@ namespace TinyEngine
 		Application(unsigned int width, unsigned int height, const char* title)
 		{
 			gGLContext = std::make_unique<OpenGLContext>(width, height, title);
-			// glContext = std::make_unique<OpenGLContext>(width, height, title);
 			gResourceManager = std::make_unique<ResourceManager>();
 			gStateManager = std::make_unique<StateManager>();
 			gSceneManager = std::make_unique<SceneManager>();

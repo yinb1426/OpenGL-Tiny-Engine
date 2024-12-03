@@ -56,7 +56,7 @@ namespace TinyEngine
 			if (this->gameObjects.find(name) != this->gameObjects.end())
 				this->gameObjects.erase(name);
 		}
-		void Render()  //windowAspect/textures应该怎么出去
+		void Render()
 		{
 			for (auto& go : gameObjects)
 			{
