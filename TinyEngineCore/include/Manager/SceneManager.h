@@ -1,5 +1,5 @@
 #pragma once
-#include "Scene.h"
+#include "Graphics/Scene.h"
 #include <unordered_map>
 #include <memory>
 #include <string>

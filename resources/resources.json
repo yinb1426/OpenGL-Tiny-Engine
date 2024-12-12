@@ -1,0 +1,56 @@
+{
+    "shaders": [
+        {
+            "name": "Triangle Shader",
+            "vs": "triangle.vert.glsl",
+            "fs": "triangle.frag.glsl"
+        },
+        {
+            "name": "Rock Shader",
+            "vs": "rock.vert.glsl",
+            "fs": "rock.frag.glsl"
+        },        
+        {
+            "name": "Cube Shader2",
+            "vs": "cube2.vert.glsl",
+            "fs": "cube2.frag.glsl"
+        },        
+        {
+            "name": "Planet Shader",
+            "vs": "planet.vert.glsl",
+            "fs": "planet.frag.glsl"
+        }
+    ],
+    "textures": [
+        {
+            "name": "Container",
+            "path": "container.jpg"
+        },
+        {
+            "name": "Awesomeface",
+            "path": "awesomeface.png"
+        }
+    ],
+    "models": [
+        {
+            "name": "Rock",
+            "path": "rock/rock.obj"
+        },
+        {
+            "name": "Planet",
+            "path": "planet/planet.obj"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Rock Material",
+            "path": "rock.json",
+            "shader": "Rock Shader"
+        },
+        {
+            "name": "Planet Material",
+            "path": "planet.json",
+            "shader": "Planet Shader"
+        }
+    ]
+}

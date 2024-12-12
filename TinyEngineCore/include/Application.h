@@ -25,13 +25,12 @@ namespace TinyEngine
 		Application(unsigned int width, unsigned int height, const char* title)
 		{
 			gGLContext = std::make_unique<OpenGLContext>(width, height, title);
-			gResourceManager = std::make_unique<ResourceManager>();
+			gResourceManager = std::make_unique<ResourceManager>(RESOURCES_JSON_PATH);
 			gStateManager = std::make_unique<StateManager>();
 			gSceneManager = std::make_unique<SceneManager>();
 			gUIContext = std::make_unique<UIContext>();
 
-			// Initialize Resources and Scene
-			InitializeResourceManager();
+			// Initialize Scene
 			InitializeScene();
 		}
 		
@@ -59,20 +58,8 @@ namespace TinyEngine
 			gUIContext->DestroyUIContext();
 			gGLContext->Shutdown();
 		}
+
 	private:
-		void InitializeResourceManager()
-		{
-			gResourceManager->AddShader("Triangle Shader", std::make_shared<Shader>(SHADER_PATH "/triangle.vert.glsl", SHADER_PATH "/triangle.frag.glsl"));
-			gResourceManager->AddShader("Rock Shader", std::make_shared<Shader>(SHADER_PATH "/rock.vert.glsl", SHADER_PATH "/rock.frag.glsl"));
-			gResourceManager->AddShader("Cube Shader2", std::make_shared<Shader>(SHADER_PATH "/cube2.vert.glsl", SHADER_PATH "/cube2.frag.glsl"));
-			gResourceManager->AddShader("Planet Shader", std::make_shared<Shader>(SHADER_PATH "/planet.vert.glsl", SHADER_PATH "/planet.frag.glsl"));
-			gResourceManager->AddTexture("Container", std::make_shared<Texture>(TEXTURE_PATH "/container.jpg"));
-			gResourceManager->AddTexture("Awesomeface", std::make_shared<Texture>(TEXTURE_PATH "/awesomeface.png"));
-			gResourceManager->AddModel("Rock", std::make_shared<Model>(MODEL_PATH "/rock/rock.obj"));
-			gResourceManager->AddModel("Planet", std::make_shared<Model>(MODEL_PATH "/planet/planet.obj"));
-			gResourceManager->AddMaterial("Rock Material", std::make_shared<Material>(MATERIAL_PATH "/rock.json", gResourceManager->GetShader("Rock Shader")));
-			gResourceManager->AddMaterial("Planet Material", std::make_shared<Material>(MATERIAL_PATH "/planet.json", gResourceManager->GetShader("Planet Shader")));
-		}
 		void InitializeScene()
 		{
 			std::shared_ptr<Scene> scene = std::make_shared<Scene>();

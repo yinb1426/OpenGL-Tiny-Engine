@@ -52,7 +52,6 @@ namespace TinyEngine
 			if (ImGui::CollapsingHeader("Colors"))
 			{
 				ImGui::ColorEdit4("BackGroung Color", (float*)&curBackgroungColor);
-
 			}
 			if (ImGui::CollapsingHeader("Camera"))
 			{
