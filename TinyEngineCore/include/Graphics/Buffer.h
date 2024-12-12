@@ -20,6 +20,11 @@ namespace TinyEngine
 	class Buffer
 	{
 	public:
+		Buffer()
+		{
+			CreateBuffer();
+		}
+
 		Buffer(BufferType type, DataUsage usage, const void* data, size_t size) 
 		{
 			CreateBuffer(type, usage, data, size);
@@ -30,12 +35,26 @@ namespace TinyEngine
 			DeleteBuffer();
 		}
 
+		void CreateBuffer()
+		{
+			if (ID == 0)
+				glGenBuffers(1, &this->ID);
+		}
+
 		void CreateBuffer(BufferType type, DataUsage usage, const void* data, size_t size)
 		{
 			this->type = GetBufferType(type);
 			this->usage = GetDataUsage(usage);
 			if (ID == 0)
 				glGenBuffers(1, &this->ID);
+			glBindBuffer(this->type, this->ID);
+			glBufferData(this->type, size, data, this->usage);
+		}
+
+		void BindBufferData(BufferType type, DataUsage usage, const void* data, size_t size)
+		{
+			this->type = GetBufferType(type);
+			this->usage = GetDataUsage(usage);
 			glBindBuffer(this->type, this->ID);
 			glBufferData(this->type, size, data, this->usage);
 		}

@@ -12,7 +12,7 @@ namespace TinyEngine
 	const float DEFAULT_PITCH = 0.0f;
 	const float DEFAULT_ZNEAR = 0.1f;
 	const float DEFAULT_ZFAR = 100.0f;
-	const float DEFAULT_FOV = 45.0f;
+	const float DEFAULT_FOVY = 45.0f;
 	const float MAX_ABS_PITCH = 89.5f;
 
 	class Camera
@@ -29,7 +29,7 @@ namespace TinyEngine
 			this->pitch = pitch;
 			this->zNear = DEFAULT_ZNEAR;
 			this->zFar = DEFAULT_ZFAR;
-			this->fov = DEFAULT_FOV;
+			this->fovY = DEFAULT_FOVY;
 			UpdateCameraVectors();
 		}
 		Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch)
@@ -43,7 +43,7 @@ namespace TinyEngine
 			this->pitch = pitch;
 			this->zNear = DEFAULT_ZNEAR;
 			this->zFar = DEFAULT_ZFAR;
-			this->fov = DEFAULT_FOV;
+			this->fovY = DEFAULT_FOVY;
 			UpdateCameraVectors();
 		}
 		~Camera() {}
@@ -78,7 +78,7 @@ namespace TinyEngine
 		}
 		glm::mat4 GetProjectionMtarix(const float aspect) const
 		{
-			return glm::perspective(glm::radians(this->fov), aspect, this->zNear, this->zFar);
+			return glm::perspective(glm::radians(this->fovY), aspect, this->zNear, this->zFar);
 		}
 		void UpdateCameraParams(glm::vec3 position, float pitch, float yaw, float zNear, float zFar)
 		{
@@ -106,7 +106,7 @@ namespace TinyEngine
 		float pitch; // ╦╘яЖ╫г(иооб)
 		float zNear;
 		float zFar;
-		float fov;
+		float fovY;
 	private:
 		glm::vec3 front;
 		glm::vec3 up;
