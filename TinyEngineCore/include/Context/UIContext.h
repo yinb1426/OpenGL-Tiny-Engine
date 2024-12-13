@@ -32,7 +32,7 @@ namespace TinyEngine
 			ImGui_ImplOpenGL3_Init("#version 430 core");
 		}
 
-		void Render(std::shared_ptr<Camera> sceneCamera)
+		void Tick(std::shared_ptr<Camera> sceneCamera)
 		{
 			// Initialize ImGui
 			ImGui_ImplOpenGL3_NewFrame();
@@ -66,7 +66,10 @@ namespace TinyEngine
 			// Update data
 			gStateManager->SetBackgroundColor(curBackgroungColor);
 			sceneCamera->UpdateCameraParams(curCamPos, curCamPitch, curCamYaw, curCamZNear, curCamZFar);
+		}
 
+		void Render()
+		{
 			// Render UI
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

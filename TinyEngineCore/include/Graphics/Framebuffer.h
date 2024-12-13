@@ -8,8 +8,84 @@ namespace TinyEngine
 	{
 	public:
 		Framebuffer(std::string name, unsigned int width, unsigned int height, unsigned int attachmentNum = 1, bool useRBODepth = true, unsigned int warpMode = GL_CLAMP_TO_EDGE, unsigned int filterMode = GL_NEAREST)
-			: name(name), attachmentNum(attachmentNum), width(width), height(height)
+			: name(name)
 		{
+			CreateFrameBuffer(width, height, attachmentNum, useRBODepth, warpMode, filterMode);
+		}
+
+		void DeleteFrameBuffer()
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			if (fbID)
+			{
+				glDeleteFramebuffers(1, &fbID);
+				glDeleteTextures(attachmentNum, textureIDs);
+				if (!depthID)  glDeleteTextures(1, &depthID);
+				delete[] textureIDs;
+				attachmentNum = 0;
+				fbID = 0;
+				depthID = 0;
+			}
+		}
+
+		void UpdateFrameBuffer()
+		{
+			unsigned int windowWidth, windowHeight;
+			gGLContext->GetWindowWidthAndHeight(windowWidth, windowHeight);
+
+			if (windowWidth != width || windowHeight != height)
+			{
+				this->width = windowWidth;
+				this->height = windowHeight;
+
+				glBindFramebuffer(GL_FRAMEBUFFER, fbID);
+
+				for (int i = 0; i < attachmentNum; i++)
+				{
+					glBindTexture(GL_TEXTURE_2D, textureIDs[i]);
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+				}
+				if (depthID)
+				{
+					glBindRenderbuffer(GL_RENDERBUFFER, depthID);
+					glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, windowWidth, windowHeight);
+				}
+
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			}
+		}
+
+		void Bind()
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, fbID);
+			glViewport(0, 0, width, height);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		}
+
+		void Unbind()
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
+
+		unsigned int GetTexture(unsigned int index = 0)
+		{
+			if (index > attachmentNum - 1 || index < 0)
+				throw std::invalid_argument("Framebuffer index: " + std::to_string(index) + "is out of range!");
+			return textureIDs[index];
+		}
+
+		unsigned int GetID() const
+		{
+			return fbID;
+		}
+
+	protected:
+		void CreateFrameBuffer(unsigned int width, unsigned int height, unsigned int attachmentNum, bool useRBODepth, unsigned int warpMode, unsigned int filterMode)
+		{
+			this->attachmentNum = attachmentNum;
+			this->width = width;
+			this->height = height;
+
 			glGenFramebuffers(1, &fbID);
 			glBindFramebuffer(GL_FRAMEBUFFER, fbID);
 			textureIDs = new unsigned int[attachmentNum];
@@ -36,46 +112,14 @@ namespace TinyEngine
 				glBindRenderbuffer(GL_RENDERBUFFER, depthID);
 				glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthID);
-
 			}
 
 			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-				std::cout << "Framebuffer not complete!" << std::endl;
+				assert("Framebuffer not complete!");
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
-		void DeleteFrameBuffer()
-		{
-			if (fbID)
-			{
-				glDeleteFramebuffers(1, &fbID);
-				glDeleteTextures(attachmentNum, textureIDs);
-				if (!depthID)  glDeleteTextures(1, &depthID);
-				delete[] textureIDs;
-				attachmentNum = 0;
-				fbID = 0;
-				depthID = 0;
-			}
-		}
-
-		void Bind()
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, fbID);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		}
-
-		void Unbind()
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		}
-
-		unsigned int GetTexture(unsigned int index = 0)
-		{
-			if (index > attachmentNum - 1 || index < 0)
-				throw std::invalid_argument("Framebuffer index: " + std::to_string(index) + "is out of range!");
-			return textureIDs[index];
-		}
-	private:
+	protected:
 		std::string name;
 		unsigned int attachmentNum = 0;
 		unsigned int fbID = 0;

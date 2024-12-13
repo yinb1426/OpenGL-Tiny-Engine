@@ -8,6 +8,7 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Material.h"
 #include "Graphics/Texture.h"
+#include "Graphics/ScreenBuffer.h"
 #include "Geometry/Model.h"
 #include <iostream>
 
@@ -29,24 +30,37 @@ namespace TinyEngine
 			gStateManager = std::make_unique<StateManager>();
 			gSceneManager = std::make_unique<SceneManager>();
 			gUIContext = std::make_unique<UIContext>();
+			screenBuffer = std::make_unique<ScreenBuffer>(width, height);
 
-			// Initialize Scene
-			InitializeScene();
+			gSceneManager->SetActiveScene("Planet Scene");
 		}
 		
 		static Application& GetInstance() { return *sInstance; }
 
 		void Loop()
 		{
+			//framebuffer->DeleteFrameBuffer();
+			//framebuffer = nullptr;
+			//unsigned int windowWidth, windowHeight;
+			//gGLContext->GetWindowWidthAndHeight(windowWidth, windowHeight);
+			//framebuffer = std::make_unique<Framebuffer>("ScreenFramebuffer", windowWidth, windowHeight);
 			while (!gGLContext->ShouldClose())
 			{
 				// state update
 				gStateManager->Enable(GL_DEPTH_TEST);
+				screenBuffer->UpdateFrameBuffer();
 
 				// render
+				// Tick -> TickLogic: 更新所有物体的信息; TickRender: 渲染所有物体
 				gStateManager->ClearPerFrame();
-				gSceneManager->Render();
-				gUIContext->Render(gSceneManager->GetActiveSceneCamera());
+				screenBuffer->Bind();
+				TickLogic();
+				TickRender();
+				screenBuffer->Unbind();
+				
+				screenBuffer->RenderToScreen();
+
+				// TODO: screenBuffer : framebuffer
 
 				// Swap Buffer and Poll Event
 				gGLContext->SwapBuffersAndPollEvents();
@@ -60,59 +74,44 @@ namespace TinyEngine
 		}
 
 	private:
-		void InitializeScene()
+		void TickLogic()
 		{
-			std::shared_ptr<Scene> scene = std::make_shared<Scene>();
-
-			Camera camera(glm::vec3(20.0f, 20.0f, 110.0f));
-			camera.UpdateCameraYaw(-101.0f);
-			camera.UpdateCameraPitch(-15.0f);
-			camera.UpdateCameraFarPlane(200.0f);
-			scene->SetCamera(camera);
-			
-			// planet
-			std::shared_ptr<Material> planetMaterial = gResourceManager->GetMaterial("Planet Material");
-			std::shared_ptr<Model> planetModel = gResourceManager->GetModel("Planet");
-			scene->AddGameObject("planet", {
-				planetModel,
-				Transform(glm::vec3(0.0f, -10.0f, 0.0f), glm::vec3(0.0f), glm::vec3(6.0f, 6.0f, 6.0f)),
-				planetMaterial
-			});
-
-			// rocks
-			std::shared_ptr<Material> rockMaterial = gResourceManager->GetMaterial("Rock Material");
-			std::shared_ptr<Model> rockModel = gResourceManager->GetModel("Rock");
-			unsigned int amount = 1000;
-			float radius = 50.0f;
-			float offset = 2.5f;
-			for (unsigned int i = 0; i < amount; i++)
+			gUIContext->Tick(gSceneManager->GetActiveSceneCamera());
+		}
+		void TickRender()
+		{
+			gSceneManager->Render();
+			gUIContext->Render();
+		}
+		void RenderQuad()
+		{
+			unsigned int quadVAO = 0, quadVBO = 0;
+			if (quadVAO == 0)
 			{
-				// translate
-				float angle = (float)i / (float)amount * 360.0f;
-				float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-				float x = sin(angle) * radius + displacement;
-				displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-				float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
-				displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-				float z = cos(angle) * radius + displacement;
-				glm::vec3 tv = glm::vec3(x, y, z);
-				// scale
-				float scale = static_cast<float>((rand() % 20) / 25.0 + 0.05);
-				glm::vec3 sv = glm::vec3(scale);
-				// rotation
-				glm::vec3 rv = glm::vec3(static_cast<float>(rand() % 360), static_cast<float>(rand() % 360), static_cast<float>(rand() % 360));	
-
-				scene->AddGameObject("rock" + std::to_string(i), {
-					rockModel,
-					Transform(tv, rv, sv),
-					rockMaterial
-				});
+				float quadVertices[] = {
+					// positions        // texture Coords
+					-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+					-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+					 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+					 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+				};
+				// setup plane VAO
+				glGenVertexArrays(1, &quadVAO);
+				glGenBuffers(1, &quadVBO);
+				glBindVertexArray(quadVAO);
+				glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+				glEnableVertexAttribArray(0);
+				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+				glEnableVertexAttribArray(1);
+				glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 			}
-
-			gSceneManager->AddScene("Planet Scene", scene);
-			gSceneManager->SetActiveScene("Planet Scene");
+			glBindVertexArray(quadVAO);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			glBindVertexArray(0);
 		}
 	private:
 		static Application* sInstance;
+		std::unique_ptr<ScreenBuffer> screenBuffer;
 	};
 }

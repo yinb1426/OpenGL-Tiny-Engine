@@ -47,7 +47,7 @@ namespace TinyEngine
 		void SetBlendFunc(GLenum srcBlendFunc, GLenum dstBlendFunc)
 		{
 			if (this->currentState.srcBlendFunc != srcBlendFunc || this->currentState.dstBlendFunc != dstBlendFunc)
-				glBlendFunc(srcBlendFunc, dstBlendFunc);
+				glBlendFunc(srcBlendFunc, dstBlendFunc);  // TODO: srcColorFunc dstColorFunc
 			this->currentState.srcBlendFunc = srcBlendFunc;
 			this->currentState.dstBlendFunc = dstBlendFunc;
 		}

@@ -8,6 +8,9 @@ namespace TinyEngine
 		~Texture();
 		void SetWarpMode(int warpMode);
 		void SetFilterMode(int filterMode);
+		void SetMinFilterMode(int filterMode);
+		void SetMagFilterMode(int filterMode);
+		void GenerateMipmap();
 		void Bind(int slot) const;
 		void Unbind() const;
 		void Destroy();

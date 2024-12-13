@@ -20,8 +20,8 @@ namespace TinyEngine
 		{
 			std::ifstream paramsFile(jsonPath, std::ios::in);
 			this->paramsJson = Json::parse(paramsFile);
-			std::string materialName = this->paramsJson["name"].get<std::string>();
-			this->name = materialName.c_str();
+			this->name = this->paramsJson["name"].get<std::string>();
+			// this->name = materialName.c_str();
 			this->shader = shader;
 		}
 		~Material() {}
@@ -70,7 +70,7 @@ namespace TinyEngine
 			return this->shader;
 		}
 	private:
-		const char* name;
+		std::string name;
 		std::shared_ptr<Shader> shader;
 		Json paramsJson;
 	};

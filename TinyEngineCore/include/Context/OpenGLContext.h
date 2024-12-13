@@ -65,6 +65,13 @@ namespace TinyEngine
 			glfwGetWindowSize(window->GetWindow(), &width, &height);
 			return (float)width / (float)height;
 		}
+		void GetWindowWidthAndHeight(unsigned int& width, unsigned int& height)
+		{
+			int windowWidth = 0, windowHeight = 0;
+			glfwGetWindowSize(window->GetWindow(), &windowWidth, &windowHeight);
+			width = static_cast<unsigned int>(windowWidth);
+			height = static_cast<unsigned int>(windowHeight);
+		}
 	private:
 		static void OnFramebufferSizeCallback(GLFWwindow* window, int width, int height)
 		{

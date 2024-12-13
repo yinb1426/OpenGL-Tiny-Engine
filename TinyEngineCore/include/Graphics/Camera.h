@@ -72,6 +72,17 @@ namespace TinyEngine
 		{
 			this->zFar = zFar;
 		}
+		void UpdateCameraParameters(glm::vec3 newPos, float newYaw, float newPitch, float newZNear, float newZFar)
+		{
+			this->position = newPos;
+			this->yaw = newYaw;
+			if (newPitch > MAX_ABS_PITCH) newPitch = MAX_ABS_PITCH;
+			else if (newPitch < -MAX_ABS_PITCH) newPitch = -MAX_ABS_PITCH;
+			this->pitch = newPitch;
+			this->zNear = newZNear;
+			this->zFar = newZFar;
+			UpdateCameraVectors();
+		}
 		glm::mat4 GetViewMatrix() const
 		{
 			return glm::lookAt(this->position, this->position + this->front, this->up);

@@ -32,6 +32,25 @@ namespace TinyEngine
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMode);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+	void Texture::SetMinFilterMode(int filterMode)
+	{
+		glBindTexture(GL_TEXTURE_2D, this->ID);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	void Texture::SetMagFilterMode(int filterMode)
+	{
+		glBindTexture(GL_TEXTURE_2D, this->ID);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMode);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	void Texture::GenerateMipmap()
+	{
+		glBindTexture(GL_TEXTURE_2D, this->ID);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+	}
 	void Texture::Bind(int slot) const
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
