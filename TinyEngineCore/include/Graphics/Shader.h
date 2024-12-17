@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <glm/glm.hpp>
+#include <3rd/glm/glm.hpp>
 
 namespace TinyEngine
 {

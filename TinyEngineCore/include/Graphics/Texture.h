@@ -1,4 +1,6 @@
 #pragma once
+#include <3rd/glad/glad.h>
+
 namespace TinyEngine
 {
 	class Texture
@@ -6,7 +8,8 @@ namespace TinyEngine
 	public:
 		Texture(const char* texturePath);
 		~Texture();
-		void SetWarpMode(int warpMode);
+		void SetWrapMode(int wrapMode);
+		void SetWrapMode(GLenum axis, int wrapMode);
 		void SetFilterMode(int filterMode);
 		void SetMinFilterMode(int filterMode);
 		void SetMagFilterMode(int filterMode);

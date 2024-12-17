@@ -67,11 +67,10 @@ namespace TinyEngine
 			}
 		}
 
-		void Destroy()
-		{
-			gUIContext->DestroyUIContext();
-			gGLContext->Shutdown();
-		}
+		//void Destroy()
+		//{
+		//	gUIContext->DestroyUIContext();
+		//}
 
 	private:
 		void TickLogic()

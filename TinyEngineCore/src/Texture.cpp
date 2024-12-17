@@ -1,9 +1,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "Graphics/Texture.h"
-#include "stb_image.h"
+#include <3rd/stb_image.h>
 #include <iostream>
+#include <string>
 #include <cstdlib>
-#include <glad/glad.h>
 
 namespace TinyEngine
 {
@@ -18,11 +18,17 @@ namespace TinyEngine
 		this->ID = 0;
 
 	}
-	void Texture::SetWarpMode(int warpMode)
+	void Texture::SetWrapMode(int wrapMode)
 	{
 		glBindTexture(GL_TEXTURE_2D, this->ID);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, warpMode);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, warpMode);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	void Texture::SetWrapMode(GLenum axis, int wrapMode)
+	{
+		glBindTexture(GL_TEXTURE_2D, this->ID);
+		glTexParameteri(GL_TEXTURE_2D, axis, wrapMode);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	void Texture::SetFilterMode(int filterMode)
@@ -53,6 +59,8 @@ namespace TinyEngine
 	}
 	void Texture::Bind(int slot) const
 	{
+		if (slot < 0 || slot>GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS)
+			throw std::invalid_argument("Slot Number Error: " + std::to_string(slot));
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, this->ID);
 	}
@@ -62,7 +70,8 @@ namespace TinyEngine
 	}
 	void Texture::Destroy()
 	{
-		glDeleteTextures(1, &this->ID);
+		if(this->ID)
+			glDeleteTextures(1, &this->ID);
 	}
 	void Texture::InitializeTexture(const char* texturePath)
 	{

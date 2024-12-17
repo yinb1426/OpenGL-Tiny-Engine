@@ -1,11 +1,11 @@
 #pragma once
 #include "Manager/StateManager.h"
 #include "Graphics/Camera.h"
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <imgui/imgui.h>
-#include <imgui/backends/imgui_impl_glfw.h>
-#include <imgui/backends/imgui_impl_opengl3.h>
+#include <3rd/glad/glad.h>
+#include <3rd/GLFW/glfw3.h>
+#include <3rd/imgui/imgui.h>
+#include <3rd/imgui/backends/imgui_impl_glfw.h>
+#include <3rd/imgui/backends/imgui_impl_opengl3.h>
 
 namespace TinyEngine
 {
@@ -19,6 +19,10 @@ namespace TinyEngine
 		UIContext(GLFWwindow* window)
 		{
 			InitializeUIContext(window);
+		}
+		~UIContext()
+		{
+			DestroyUIContext();
 		}
 		void InitializeUIContext(GLFWwindow* window)
 		{
