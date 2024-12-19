@@ -48,8 +48,50 @@ namespace TinyEngine
 				shader->SetUniform((type + number).c_str(), (int)i);
 				textureMap[textures[i].name]->Bind(i);
 			}
-
 			vertexArray.Draw();
+		}
+
+		void DrawInstanced(std::shared_ptr<Shader> shader, TextureMap textureMap, std::vector<glm::mat4> modelMatrices)
+		{
+			// bind appropriate textures
+			unsigned int diffuseNr = 1;
+			unsigned int specularNr = 1;
+			unsigned int normalNr = 1;
+			unsigned int heightNr = 1;
+			for (unsigned int i = 0; i < textures.size(); i++)
+			{
+				std::string number;
+				std::string type = textures[i].type;
+				if (type == "texture_diffuse")
+					number = std::to_string(diffuseNr++);
+				else if (type == "texture_specular")
+					number = std::to_string(specularNr++); // transfer unsigned int to string
+				else if (type == "texture_normal")
+					number = std::to_string(normalNr++); // transfer unsigned int to string
+				else if (type == "texture_height")
+					number = std::to_string(heightNr++); // transfer unsigned int to string
+
+				// now set the sampler to the correct texture unit
+				shader->SetUniform((type + number).c_str(), (int)i);
+				textureMap[textures[i].name]->Bind(i);
+			}
+
+			// Create instancedMatricesBuffer
+			Buffer matricesBuffer(BufferType::Vertex, DataUsage::Static, &modelMatrices[0], sizeof(glm::mat4) * modelMatrices.size());
+
+			vertexArray.Bind();
+			vertexArray.SetAtribute(7, 4, GL_FLOAT, sizeof(glm::mat4), 0);
+			vertexArray.SetAtribute(8, 4, GL_FLOAT, sizeof(glm::mat4), sizeof(glm::vec4));
+			vertexArray.SetAtribute(9, 4, GL_FLOAT, sizeof(glm::mat4), 2 * sizeof(glm::vec4));
+			vertexArray.SetAtribute(10, 4, GL_FLOAT, sizeof(glm::mat4), 3 * sizeof(glm::vec4));
+
+			glVertexAttribDivisor(7, 1);
+			glVertexAttribDivisor(8, 1);
+			glVertexAttribDivisor(9, 1);
+			glVertexAttribDivisor(10, 1);
+			vertexArray.Unbind();
+			std::cout << modelMatrices.size() << std::endl;
+			vertexArray.DrawInstanced(modelMatrices.size());
 		}
 	private:
 		std::vector<Vertex> vertices;

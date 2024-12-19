@@ -73,22 +73,42 @@ namespace TinyEngine
 			scene->SetCamera(camera);
 
 			const auto& gosJson = sceneJson["game_objects"];
+
 			for (auto& iterator : gosJson.items())
 			{
 				auto& goJson = iterator.value();
 				std::string goName = goJson["name"].get<std::string>();
 				std::string goModelName = goJson["model"].get<std::string>();
 				std::string goMaterialName = goJson["material"].get<std::string>();
+
+				std::vector<Transform> goTransforms;
 				const auto& goTransformJson = goJson["transform"];
-				std::vector<float> goPosition = goTransformJson["position"].get<std::vector<float>>();
-				std::vector<float> goRotation = goTransformJson["rotation"].get<std::vector<float>>();
-				std::vector<float> goScale = goTransformJson["scale"].get<std::vector<float>>();
+				std::vector<float> goPosition;
+				std::vector<float> goRotation;
+				std::vector<float> goScale;
+				if (!goTransformJson.is_array())
+				{
+					goPosition = goTransformJson["position"].get<std::vector<float>>();
+					goRotation = goTransformJson["rotation"].get<std::vector<float>>();
+					goScale = goTransformJson["scale"].get<std::vector<float>>();
+					goTransforms.push_back(Transform(glm::vec3(goPosition[0], goPosition[1], goPosition[2]), glm::vec3(goRotation[0], goRotation[1], goRotation[2]), glm::vec3(goScale[0], goScale[1], goScale[2])));
+				}
+				else
+				{
+					for (const auto& transformItem : goTransformJson)
+					{
+						goPosition = transformItem["position"].get<std::vector<float>>();
+						goRotation = transformItem["rotation"].get<std::vector<float>>();
+						goScale = transformItem["scale"].get<std::vector<float>>();
+						goTransforms.push_back(Transform(glm::vec3(goPosition[0], goPosition[1], goPosition[2]), glm::vec3(goRotation[0], goRotation[1], goRotation[2]), glm::vec3(goScale[0], goScale[1], goScale[2])));
+					}
+				}
 
 				std::shared_ptr<Model> goModel = gResourceManager->GetModel(goModelName);
 				std::shared_ptr<Material> goMaterial = gResourceManager->GetMaterial(goMaterialName);
 				scene->AddGameObject(goName, {
 					goModel,
-					Transform(glm::vec3(goPosition[0], goPosition[1], goPosition[2]), glm::vec3(goRotation[0], goRotation[1], goRotation[2]), glm::vec3(goScale[0], goScale[1], goScale[2])),
+					goTransforms,
 					goMaterial
 				});
 			}

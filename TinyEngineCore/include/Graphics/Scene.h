@@ -12,19 +12,20 @@ namespace TinyEngine
 	struct GameObject
 	{
 		std::shared_ptr<Model> model;
-		Transform transform;
+		std::vector<Transform> transforms;
 		std::shared_ptr<Material> material;
 
 		void Render(Camera camera)
 		{
-			glm::mat4 modelMatrix = transform.GetModelMatrix();
+			glm::mat4 modelMatrix = transforms.size() == 1 ? transforms[0].GetModelMatrix() : glm::mat4(1.0f);
 			glm::mat4 viewMatrix = camera.GetViewMatrix();
-			glm::mat4 projectionMatrix = camera.GetProjectionMtarix(gGLContext->GetWindowAspect());
+			glm::mat4 projectionMatrix = camera.GetProjectionMatrix(gGLContext->GetWindowAspect());
 			material->SetMatrices(modelMatrix, viewMatrix, projectionMatrix);
 			material->SetUniform(gResourceManager->GetTextureMap());
-			model->Draw(material->GetShader(), gResourceManager->GetTextureMap());
+			model->Draw(material->GetShader(), gResourceManager->GetTextureMap(), transforms);
 		}
 	};
+
 	using GameObjectMap = std::unordered_map<std::string, GameObject>;
 	class Scene
 	{

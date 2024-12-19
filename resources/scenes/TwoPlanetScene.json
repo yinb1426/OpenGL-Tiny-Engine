@@ -1,5 +1,5 @@
 {
-    "name": "Planet Scene2",
+    "name": "Two Planet Scene",
     "camera": {
         "position": [20.0, 20.0, 110.0],
         "yaw": -101.0,
@@ -11,17 +11,7 @@
         {
             "name": "planet",
             "model": "Planet",
-            "material": "planet-material",
-            "transform": {
-                "position": [0.0, -10.0, 0.0],
-                "rotation": [0, 0, 0],
-                "scale": [6.0, 6.0, 6.0]
-            }
-        },
-        {
-            "name": "rock",
-            "model": "Rock",
-            "material": "rock-material2",
+            "material": "planet-material2",
             "transform": [
                 {
                     "position": [-2.09, 0.868, 50.84],

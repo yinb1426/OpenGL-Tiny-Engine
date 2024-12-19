@@ -87,7 +87,7 @@ namespace TinyEngine
 		{
 			return glm::lookAt(this->position, this->position + this->front, this->up);
 		}
-		glm::mat4 GetProjectionMtarix(const float aspect) const
+		glm::mat4 GetProjectionMatrix(const float aspect) const
 		{
 			return glm::perspective(glm::radians(this->fovY), aspect, this->zNear, this->zFar);
 		}

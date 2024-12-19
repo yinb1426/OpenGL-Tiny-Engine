@@ -9,7 +9,12 @@
             "name": "Rock Shader",
             "vs": "rock.vert.glsl",
             "fs": "rock.frag.glsl"
-        },        
+        },
+        {
+            "name": "Rock Shader2",
+            "vs": "rock2.vert.glsl",
+            "fs": "rock.frag.glsl"
+        }, 
         {
             "name": "Cube Shader2",
             "vs": "cube2.vert.glsl",
@@ -18,6 +23,11 @@
         {
             "name": "Planet Shader",
             "vs": "planet.vert.glsl",
+            "fs": "planet.frag.glsl"
+        },
+        {
+            "name": "Planet Shader2",
+            "vs": "planet2.vert.glsl",
             "fs": "planet.frag.glsl"
         }
     ],
@@ -43,14 +53,24 @@
     ],
     "materials": [
         {
-            "name": "Rock Material",
+            "name": "rock-material",
             "path": "rock.json",
             "shader": "Rock Shader"
         },
         {
-            "name": "Planet Material",
+            "name": "rock-material2",
+            "path": "rock.json",
+            "shader": "Rock Shader2"
+        },
+        {
+            "name": "planet-material",
             "path": "planet.json",
             "shader": "Planet Shader"
+        },
+        {
+            "name": "planet-material2",
+            "path": "planet.json",
+            "shader": "Planet Shader2"
         }
     ]
 }

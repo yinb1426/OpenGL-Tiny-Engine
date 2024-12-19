@@ -32,18 +32,13 @@ namespace TinyEngine
 			gUIContext = std::make_unique<UIContext>();
 			screenBuffer = std::make_unique<ScreenBuffer>(width, height);
 
-			gSceneManager->SetActiveScene("Planet Scene");
+			gSceneManager->SetActiveScene("Planet Scene2");
 		}
 		
 		static Application& GetInstance() { return *sInstance; }
 
 		void Loop()
 		{
-			//framebuffer->DeleteFrameBuffer();
-			//framebuffer = nullptr;
-			//unsigned int windowWidth, windowHeight;
-			//gGLContext->GetWindowWidthAndHeight(windowWidth, windowHeight);
-			//framebuffer = std::make_unique<Framebuffer>("ScreenFramebuffer", windowWidth, windowHeight);
 			while (!gGLContext->ShouldClose())
 			{
 				// state update
@@ -60,17 +55,10 @@ namespace TinyEngine
 				
 				screenBuffer->RenderToScreen();
 
-				// TODO: screenBuffer : framebuffer
-
 				// Swap Buffer and Poll Event
 				gGLContext->SwapBuffersAndPollEvents();
 			}
 		}
-
-		//void Destroy()
-		//{
-		//	gUIContext->DestroyUIContext();
-		//}
 
 	private:
 		void TickLogic()

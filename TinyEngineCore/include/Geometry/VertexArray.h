@@ -46,6 +46,19 @@ namespace TinyEngine
 			glDrawElements(GL_TRIANGLES, numPoints, GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 		}
+
+		void DrawInstanced(unsigned int amount)
+		{
+			glBindVertexArray(this->VAO);
+			glDrawElementsInstanced(GL_TRIANGLES, numPoints, GL_UNSIGNED_INT, 0, amount);
+			glBindVertexArray(0);
+		}
+
+		void SetAtribute(unsigned int index, int size, GLenum type, int stride, size_t offset, bool normalized = false)
+		{
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(index, size, type, normalized, stride, (void*)offset);
+		}
 	private:
 		void SetupMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 		{
