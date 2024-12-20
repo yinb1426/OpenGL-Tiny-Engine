@@ -29,6 +29,11 @@
             "name": "Planet Shader2",
             "vs": "planet2.vert.glsl",
             "fs": "planet.frag.glsl"
+        },
+        {
+            "name": "Vintage Shader",
+            "vs": "vintage.vert.glsl",
+            "fs": "vintage.frag.glsl"
         }
     ],
     "textures": [

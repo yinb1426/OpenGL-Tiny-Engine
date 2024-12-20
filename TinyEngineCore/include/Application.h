@@ -9,6 +9,7 @@
 #include "Graphics/Material.h"
 #include "Graphics/Texture.h"
 #include "Graphics/ScreenBuffer.h"
+#include "Graphics/PostProcessEffect.h"
 #include "Geometry/Model.h"
 #include <iostream>
 
@@ -31,6 +32,7 @@ namespace TinyEngine
 			gSceneManager = std::make_unique<SceneManager>();
 			gUIContext = std::make_unique<UIContext>();
 			screenBuffer = std::make_unique<ScreenBuffer>(width, height);
+			curFramebuffer = std::make_unique<Framebuffer>("Current Framebuffer", screenBuffer->GetWidth(), screenBuffer->GetHeight());
 
 			gSceneManager->SetActiveScene("Planet Scene2");
 		}
@@ -39,11 +41,13 @@ namespace TinyEngine
 
 		void Loop()
 		{
+			std::unique_ptr<TestEffect> effect = std::make_unique<TestEffect>();
+
 			while (!gGLContext->ShouldClose())
 			{
 				// state update
 				gStateManager->Enable(GL_DEPTH_TEST);
-				screenBuffer->UpdateFrameBuffer();
+				screenBuffer->UpdateFramebuffer();
 
 				// render
 				// Tick -> TickLogic: 更新所有物体的信息; TickRender: 渲染所有物体
@@ -53,7 +57,25 @@ namespace TinyEngine
 				TickRender();
 				screenBuffer->Unbind();
 				
+
+				// Vintage测试
+				//curFramebuffer->UpdateFramebuffer();
+				//curFramebuffer->Bind();
+				//glClear(GL_COLOR_BUFFER_BIT);
+				//std::shared_ptr<Shader> vintageShader = gResourceManager->GetShader("Vintage Shader");
+				//vintageShader->Use();
+				//screenBuffer->BindTexture(0);
+				//RenderQuad1();
+				//vintageShader->Unuse();
+				//curFramebuffer->Unbind();
+
+				//curFramebuffer->BlitFramebuffer(screenBuffer.get());
+				
+				effect->ApplyEffect(curFramebuffer, screenBuffer);
+				
 				screenBuffer->RenderToScreen();
+
+				RenderUI();
 
 				// Swap Buffer and Poll Event
 				gGLContext->SwapBuffersAndPollEvents();
@@ -68,9 +90,31 @@ namespace TinyEngine
 		void TickRender()
 		{
 			gSceneManager->Render();
+			
+		}
+		void RenderUI()
+		{
 			gUIContext->Render();
 		}
-		void RenderQuad()
+
+		//void VintagePostProcess()
+		//{
+		//	std::unique_ptr<Framebuffer> curFramebuffer = std::make_unique<Framebuffer>("Vintage Framebuffer", screenBuffer->GetWidth(), screenBuffer->GetHeight());
+		//	
+
+		//	curFramebuffer->Bind();
+		//	
+		//	screenBuffer->BindTexture(0);
+		//	RenderQuad();
+		//	
+		//	curFramebuffer->Unbind();
+
+		//	curFramebuffer->BlitFramebuffer(screenBuffer.get());
+		//	curFramebuffer->DeleteFramebuffer();
+		//}
+
+
+		void RenderQuad1()
 		{
 			unsigned int quadVAO = 0, quadVBO = 0;
 			if (quadVAO == 0)
@@ -100,5 +144,6 @@ namespace TinyEngine
 	private:
 		static Application* sInstance;
 		std::unique_ptr<ScreenBuffer> screenBuffer;
+		std::unique_ptr<Framebuffer> curFramebuffer;
 	};
 }

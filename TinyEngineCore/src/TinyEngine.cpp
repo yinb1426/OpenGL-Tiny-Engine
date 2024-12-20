@@ -1,14 +1,11 @@
 ﻿#include "Application.h"
+#include "Config.h"
 
 using namespace TinyEngine;
 
-// settings
-const unsigned int SCR_WIDTH = 1200;
-const unsigned int SCR_HEIGHT = 800;
-
 int main()
 {
-    auto application = std::make_unique<Application>(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL");
+    auto application = std::make_unique<Application>(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL");
     application->Loop();
     
     return 0;

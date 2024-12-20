@@ -10,10 +10,15 @@ namespace TinyEngine
 		Framebuffer(std::string name, unsigned int width, unsigned int height, unsigned int attachmentNum = 1, bool useRBODepth = true, unsigned int warpMode = GL_CLAMP_TO_EDGE, unsigned int filterMode = GL_NEAREST)
 			: name(name)
 		{
-			CreateFrameBuffer(width, height, attachmentNum, useRBODepth, warpMode, filterMode);
+			CreateFramebuffer(width, height, attachmentNum, useRBODepth, warpMode, filterMode);
 		}
 
-		void DeleteFrameBuffer()
+		~Framebuffer()
+		{
+			DeleteFramebuffer();
+		}
+
+		void DeleteFramebuffer()
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			if (fbID)
@@ -28,7 +33,7 @@ namespace TinyEngine
 			}
 		}
 
-		void UpdateFrameBuffer()
+		void UpdateFramebuffer()
 		{
 			unsigned int windowWidth, windowHeight;
 			gGLContext->GetWindowWidthAndHeight(windowWidth, windowHeight);
@@ -79,8 +84,39 @@ namespace TinyEngine
 			return fbID;
 		}
 
+		void BlitFramebuffer(Framebuffer* dstFramebuffer)
+		{
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, this->fbID);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dstFramebuffer->GetID());
+			glBlitFramebuffer(0, 0, this->width, this->height, 0, 0, dstFramebuffer->width, dstFramebuffer->height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+			// this->Unbind();
+		}
+
+		unsigned int GetWidth() const
+		{
+			return this->width;
+		}
+
+		unsigned int GetHeight() const
+		{
+			return this->height;
+		}
+
+		void BindTexture(unsigned int slot, unsigned int ID = 0)
+		{
+			glActiveTexture(GL_TEXTURE0 + slot);
+			glBindTexture(GL_TEXTURE_2D, textureIDs[ID]);
+		}
+
+		void RenderToScreen()
+		{
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, fbID);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+			glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		}
+
 	protected:
-		void CreateFrameBuffer(unsigned int width, unsigned int height, unsigned int attachmentNum, bool useRBODepth, unsigned int warpMode, unsigned int filterMode)
+		void CreateFramebuffer(unsigned int width, unsigned int height, unsigned int attachmentNum, bool useRBODepth, unsigned int warpMode, unsigned int filterMode)
 		{
 			this->attachmentNum = attachmentNum;
 			this->width = width;

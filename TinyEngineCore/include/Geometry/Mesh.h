@@ -90,7 +90,6 @@ namespace TinyEngine
 			glVertexAttribDivisor(9, 1);
 			glVertexAttribDivisor(10, 1);
 			vertexArray.Unbind();
-			std::cout << modelMatrices.size() << std::endl;
 			vertexArray.DrawInstanced(modelMatrices.size());
 		}
 	private:

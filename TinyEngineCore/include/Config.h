@@ -6,3 +6,6 @@
 #define SCENE_ROOT_PATH "../../resources/scenes/"
 
 #define RESOURCES_JSON_PATH "../../resources/resources.json"
+
+#define SCREEN_WIDTH 1200
+#define SCREEN_HEIGHT 800

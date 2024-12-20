@@ -10,6 +10,11 @@ namespace TinyEngine
 			: Framebuffer("Screen Buffer", width, height, 1, true, GL_CLAMP_TO_EDGE, GL_NEAREST)
 		{}
 
+		~ScreenBuffer()
+		{
+			DeleteFramebuffer();
+		}
+
 		void RenderToScreen()
 		{
 			glBindFramebuffer(GL_READ_FRAMEBUFFER, fbID);
