@@ -31,9 +31,9 @@
             "fs": "planet.frag.glsl"
         },
         {
-            "name": "Vintage Shader",
-            "vs": "vintage.vert.glsl",
-            "fs": "vintage.frag.glsl"
+            "name": "Vignette Shader",
+            "vs": "postprocess.vert.glsl",
+            "fs": "vignette.frag.glsl"
         }
     ],
     "textures": [

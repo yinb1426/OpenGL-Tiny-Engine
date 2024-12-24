@@ -52,38 +52,4 @@ namespace TinyEngine
 		std::shared_ptr<Shader> shader;
 		unsigned int quadVAO, quadVBO;
 	};
-
-    class TestEffect : public PostProcessEffect
-    {
-    public:
-        TestEffect()
-        {
-            InitializeEffect();
-        }
-
-        ~TestEffect()
-        {
-            DeleteEffect();
-        }
-
-        void InitializeEffect() override
-        {
-            InitializeQuad();
-            shader = gResourceManager->GetShader("Vintage Shader");
-        }
-
-        void ApplyEffect(std::unique_ptr<Framebuffer>& curFramebuffer, std::unique_ptr<ScreenBuffer>& screenBuffer)
-        {
-            curFramebuffer->UpdateFramebuffer();
-            curFramebuffer->Bind();
-            glClear(GL_COLOR_BUFFER_BIT);
-            shader->Use();
-            screenBuffer->BindTexture(0);
-            RenderQuad();
-            shader->Unuse();
-            curFramebuffer->Unbind();
-
-            curFramebuffer->BlitFramebuffer(screenBuffer.get());
-        }
-    };
 }
