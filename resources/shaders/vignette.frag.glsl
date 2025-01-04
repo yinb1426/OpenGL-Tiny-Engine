@@ -15,5 +15,6 @@ void main()
    float borderLength = length(uv);
    borderLength = 1.0 - smoothstep(intensity - smoothness * 0.5, intensity + smoothness * 0.5, borderLength);
 
-   FragColor = vec4(albedo * borderLength, 1.0);
+
+   FragColor = vec4(mix(vignetteColor.rgb, albedo, borderLength), 1.0);
 }

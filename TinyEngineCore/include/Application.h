@@ -12,7 +12,6 @@
 #include "Graphics/PostProcessVolume.h"
 #include "Geometry/Model.h"
 #include <iostream>
-#include <Graphics/PostProcessEffects/VignetteEffect.h>
 
 
 namespace TinyEngine 
@@ -38,7 +37,7 @@ namespace TinyEngine
 
 			gSceneManager->SetActiveScene("Planet Scene2");
 
-			postProcessVolume = std::make_unique<PostProcessVolume>();
+			postProcessVolume = std::make_shared<PostProcessVolume>();
 		}
 		
 		static Application& GetInstance() { return *sInstance; }
@@ -53,7 +52,7 @@ namespace TinyEngine
 				gStateManager->Enable(GL_DEPTH_TEST);
 				screenBuffer->UpdateFramebuffer();
 
-				// render
+				// Render Scene
 				// Tick -> TickLogic: 更新所有物体的信息; TickRender: 渲染所有物体
 				gStateManager->ClearPerFrame();
 				screenBuffer->Bind();
@@ -61,11 +60,10 @@ namespace TinyEngine
 				TickRender();
 				screenBuffer->Unbind();
 				
-				postProcessVolume->ApplyEffects(curFramebuffer, screenBuffer);
+				// Post Process Effect
+				postProcessVolume->ApplyEffects(curFramebuffer.get(), screenBuffer.get());
 				
-
 				screenBuffer->RenderToScreen();
-
 				RenderUI();
 
 				// Swap Buffer and Poll Event
@@ -76,7 +74,7 @@ namespace TinyEngine
 	private:
 		void TickLogic()
 		{
-			gUIContext->Tick(gSceneManager->GetActiveSceneCamera());
+			gUIContext->Tick(gSceneManager->GetActiveSceneCamera(), postProcessVolume.get());
 		}
 		void TickRender()
 		{
@@ -91,6 +89,6 @@ namespace TinyEngine
 		static Application* sInstance;
 		std::unique_ptr<ScreenBuffer> screenBuffer;
 		std::unique_ptr<Framebuffer> curFramebuffer;
-		std::unique_ptr<PostProcessVolume> postProcessVolume;
+		std::shared_ptr<PostProcessVolume> postProcessVolume;
 	};
 }

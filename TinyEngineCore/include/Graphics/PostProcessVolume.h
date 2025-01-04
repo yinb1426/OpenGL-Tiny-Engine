@@ -11,7 +11,7 @@ namespace TinyEngine
 		struct PostProcessEffectPair
 		{
 			std::shared_ptr<PostProcessEffect> effect;
-			bool isUse;
+			bool isEnabled;
 		};
 
 		std::unordered_map<std::string, std::shared_ptr<PostProcessEffectPair>> effects;
@@ -24,9 +24,9 @@ namespace TinyEngine
 			effects["VignetteEffect"] = std::make_shared<PostProcessEffectPair>(effectPair);
 		}
 
-		void SetEffectUse(std::string name, bool isUse)
+		void SetEffectEnabled(std::string name, bool isEnabled)
 		{
-			effects[name]->isUse = isUse;
+			effects[name]->isEnabled = isEnabled;
 		}
 
 		std::shared_ptr<PostProcessEffectPair> GetPostProcessEffect(std::string name)
@@ -34,11 +34,11 @@ namespace TinyEngine
 			return effects[name];
 		}
 
-		void ApplyEffects(std::unique_ptr<Framebuffer>& curFramebuffer, std::unique_ptr<ScreenBuffer>& screenBuffer)
+		void ApplyEffects(Framebuffer* curFramebuffer, ScreenBuffer* screenBuffer)
 		{
 			for (auto& effect : effects)
 			{
-				if (effect.second->isUse)
+				if (effect.second->isEnabled)
 					effect.second->effect->ApplyEffect(curFramebuffer, screenBuffer);
 			}
 		}

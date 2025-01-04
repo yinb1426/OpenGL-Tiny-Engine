@@ -1,6 +1,7 @@
 #pragma once
 #include "Manager/StateManager.h"
 #include "Graphics/Camera.h"
+#include "Graphics/PostProcessVolume.h"
 #include <3rd/glad/glad.h>
 #include <3rd/GLFW/glfw3.h>
 #include <3rd/imgui/imgui.h>
@@ -36,7 +37,7 @@ namespace TinyEngine
 			ImGui_ImplOpenGL3_Init("#version 430 core");
 		}
 
-		void Tick(std::shared_ptr<Camera> sceneCamera)
+		void Tick(std::shared_ptr<Camera> sceneCamera, PostProcessVolume* volume)
 		{
 			// Initialize ImGui
 			ImGui_ImplOpenGL3_NewFrame();
@@ -75,12 +76,32 @@ namespace TinyEngine
 			{
 				if (ImGui::CollapsingHeader("Vignette Effect"))
 				{
-					// std::unique_ptr<VignetteEffect> effect = postProcessVolume->effects["VignetteEffect"].effect;
-					//ImGui::ColorEdit4("BackGroung Color", (float*)&);
-					//ImGui::DragFloat("Pitch", &curCamPitch, 0.1f, -MAX_ABS_PITCH, MAX_ABS_PITCH);
-					//ImGui::DragFloat("Yaw", &curCamYaw, 0.1f);
-					//ImGui::DragFloat("Near Plane", &curCamZNear, 0.1f);
-					//ImGui::DragFloat("Far Plane", &curCamZFar, 0.1f);
+					static bool isVignetteEffectEnabled = false;
+					if (ImGui::Checkbox("Enable Vignette Effect", &isVignetteEffectEnabled))
+					{
+						volume->effects["VignetteEffect"]->isEnabled = isVignetteEffectEnabled;
+					}
+						
+					if (isVignetteEffectEnabled)
+					{
+
+						std::shared_ptr<VignetteEffect> effect = std::dynamic_pointer_cast<VignetteEffect>(volume->effects["VignetteEffect"]->effect);
+
+						glm::vec4 curVignetteColor = effect->vignetteColor;
+						glm::vec2 curCenter = effect->center;
+						float curIntensity = effect->intensity;
+						float curSmoothness = effect->smoothness;
+
+						ImGui::ColorEdit4("Color", (float*)&curVignetteColor);
+						ImGui::DragFloat2("Center", (float*)&curCenter, 0.01f, 0.0f, 1.0f);
+						ImGui::DragFloat("Intensity", &curIntensity, 0.01f, 0.0f, 1.0f);
+						ImGui::DragFloat("Smoothness", &curSmoothness, 0.01f, 0.0f, 1.0f);
+
+						effect->vignetteColor = curVignetteColor;
+						effect->center = curCenter;
+						effect->intensity = curIntensity;
+						effect->smoothness = curSmoothness;
+					}
 				}
 			}
 

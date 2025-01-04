@@ -22,7 +22,7 @@ namespace TinyEngine
             shader = gResourceManager->GetShader("Vignette Shader");
         }
 
-        void ApplyEffect(std::unique_ptr<Framebuffer>& curFramebuffer, std::unique_ptr<ScreenBuffer>& screenBuffer)
+        void ApplyEffect(Framebuffer* curFramebuffer, ScreenBuffer* screenBuffer)
         {
             curFramebuffer->UpdateFramebuffer();
             curFramebuffer->Bind();
@@ -37,7 +37,7 @@ namespace TinyEngine
             shader->Unuse();
             curFramebuffer->Unbind();
 
-            curFramebuffer->BlitFramebuffer(screenBuffer.get());
+            curFramebuffer->BlitFramebuffer(screenBuffer);
         }
     public:
         glm::vec4 vignetteColor;

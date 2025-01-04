@@ -3,6 +3,7 @@
 #include "Geometry/VertexArray.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Framebuffer.h"
+#include "Graphics/ScreenBuffer.h"
 #include "Config.h"
 #include <memory>
 #include <vector>
@@ -13,7 +14,7 @@ namespace TinyEngine
 	{
 	public:
 		virtual void InitializeEffect() = 0;
-		virtual void ApplyEffect(std::unique_ptr<Framebuffer>& curFramebuffer, std::unique_ptr<ScreenBuffer>& screenBuffer) = 0;
+		virtual void ApplyEffect(Framebuffer* curFramebuffer, ScreenBuffer* screenBuffer) = 0;
 		void DeleteEffect()
 		{
             glDeleteVertexArrays(1, &quadVAO);
