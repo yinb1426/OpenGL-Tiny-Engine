@@ -50,7 +50,6 @@ namespace TinyEngine
             glBindVertexArray(0);
         }
 	protected:
-		std::shared_ptr<Shader> shader;
 		unsigned int quadVAO, quadVBO;
 	};
 }

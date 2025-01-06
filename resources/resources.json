@@ -34,6 +34,21 @@
             "name": "Vignette Shader",
             "vs": "postprocess.vert.glsl",
             "fs": "vignette.frag.glsl"
+        },
+        {
+            "name": "Bloom-Brightness Shader",
+            "vs": "postprocess.vert.glsl",
+            "fs": "bloom-brightness.frag.glsl"
+        },
+        {
+            "name": "Bloom-Blur Shader",
+            "vs": "postprocess.vert.glsl",
+            "fs": "bloom-blur.frag.glsl"
+        },
+        {
+            "name": "Bloom-Combine Shader",
+            "vs": "postprocess.vert.glsl",
+            "fs": "bloom-combine.frag.glsl"
         }
     ],
     "textures": [

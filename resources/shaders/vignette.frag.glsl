@@ -10,11 +10,11 @@ uniform sampler2D albedo;
 
 void main()
 {
-   vec3 albedo = texture(albedo, texCoords).rgb;
+   vec3 albedoColor = texture(albedo, texCoords).rgb;
    vec2 uv = texCoords - center;
    float borderLength = length(uv);
    borderLength = 1.0 - smoothstep(intensity - smoothness * 0.5, intensity + smoothness * 0.5, borderLength);
 
 
-   FragColor = vec4(mix(vignetteColor.rgb, albedo, borderLength), 1.0);
+   FragColor = vec4(mix(vignetteColor.rgb, albedoColor, borderLength), 1.0);
 }

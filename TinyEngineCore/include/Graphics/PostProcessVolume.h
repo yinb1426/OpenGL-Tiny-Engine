@@ -1,5 +1,6 @@
 #pragma once
 #include "Graphics/PostProcessEffects/VignetteEffect.h"
+#include "Graphics/PostProcessEffects/BloomEffect.h"
 #include <unordered_map>
 #include <memory>
 #include <string>
@@ -18,10 +19,8 @@ namespace TinyEngine
 
 		PostProcessVolume()
 		{
-			PostProcessEffectPair effectPair = {
-				std::make_shared<VignetteEffect>(), true
-			};
-			effects["VignetteEffect"] = std::make_shared<PostProcessEffectPair>(effectPair);
+			// effects["VignetteEffect"] = std::make_shared<PostProcessEffectPair>(PostProcessEffectPair({ std::make_shared<VignetteEffect>(), true }));
+			// effects["BloomEffect"] = std::make_shared<PostProcessEffectPair>(PostProcessEffectPair({ std::make_shared<BloomEffect>(), true }));
 		}
 
 		void SetEffectEnabled(std::string name, bool isEnabled)

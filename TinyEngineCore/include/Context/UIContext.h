@@ -76,7 +76,7 @@ namespace TinyEngine
 			{
 				if (ImGui::CollapsingHeader("Vignette Effect"))
 				{
-					static bool isVignetteEffectEnabled = false;
+					static bool isVignetteEffectEnabled = volume->effects["VignetteEffect"]->isEnabled;
 					if (ImGui::Checkbox("Enable Vignette Effect", &isVignetteEffectEnabled))
 					{
 						volume->effects["VignetteEffect"]->isEnabled = isVignetteEffectEnabled;

@@ -44,7 +44,8 @@ namespace TinyEngine
 
 		void Loop()
 		{
-			//std::unique_ptr<VignetteEffect> effect2 = std::make_unique<VignetteEffect>();
+			std::unique_ptr<VignetteEffect> effect = std::make_unique<VignetteEffect>();
+			std::unique_ptr<BloomEffect> effect2 = std::make_unique<BloomEffect>();
 
 			while (!gGLContext->ShouldClose())
 			{
@@ -61,7 +62,10 @@ namespace TinyEngine
 				screenBuffer->Unbind();
 				
 				// Post Process Effect
-				postProcessVolume->ApplyEffects(curFramebuffer.get(), screenBuffer.get());
+				//postProcessVolume->ApplyEffects(curFramebuffer.get(), screenBuffer.get());
+				// effect->ApplyEffect(curFramebuffer.get(), screenBuffer.get());
+				effect2->ApplyEffect(curFramebuffer.get(), screenBuffer.get());
+
 				
 				screenBuffer->RenderToScreen();
 				RenderUI();
