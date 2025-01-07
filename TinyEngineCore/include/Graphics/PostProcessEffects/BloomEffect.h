@@ -30,7 +30,6 @@ namespace TinyEngine
 		void ApplyEffect(std::shared_ptr<Framebuffer> curFramebuffer, std::shared_ptr<ScreenBuffer> screenBuffer)
 		{
 			brightnessFramebuffer->UpdateFramebuffer();
-			curFramebuffer->UpdateFramebuffer();
 
 			brightnessFramebuffer->Bind();
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -42,6 +41,7 @@ namespace TinyEngine
 			brightnessShader->Unuse();
 			brightnessFramebuffer->Unbind();
 
+			curFramebuffer->UpdateFramebuffer();
 			bool horizontal = true;
 			unsigned int amount = 10;
 			blurShader->Use();

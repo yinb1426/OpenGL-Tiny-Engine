@@ -35,7 +35,7 @@ namespace TinyEngine
 		{
 			shader->Use();
 			const auto& params = paramsJson["params"];
-			const auto& textures = paramsJson["textures"];
+			// const auto& textures = paramsJson["textures"];
 			for (auto& iterator : params.items())
 			{
 				auto& paramContent = iterator.value();
@@ -51,25 +51,29 @@ namespace TinyEngine
 					values = { paramValue.get<float>() };
 				shader->SetUniform(paramName, values);
 			}
-			int curIndex = 0;
-			for (auto& iterator : textures.items())
-			{
-				auto& texturesContent = iterator.value();
-				std::string texturesNameString = texturesContent["name"].get<std::string>();
-				const char* texturesName = texturesNameString.c_str();
-				std::string texturesPath = texturesContent["path"].get<std::string>();
-				int texturesIndex = curIndex;
-				if(texturesContent.contains("index"))
-					texturesIndex = texturesContent["index"].get<int>();
-				std::shared_ptr<Texture> curTexture = textureMap[texturesPath];
-				shader->SetUniform(texturesName, texturesIndex);
-				curTexture->Bind(texturesIndex);
-				curIndex++;
-			}
+			//int curIndex = 0;
+			//for (auto& iterator : textures.items())
+			//{
+			//	auto& texturesContent = iterator.value();
+			//	std::string texturesNameString = texturesContent["name"].get<std::string>();
+			//	const char* texturesName = texturesNameString.c_str();
+			//	std::string texturesPath = texturesContent["path"].get<std::string>();
+			//	int texturesIndex = curIndex;
+			//	if(texturesContent.contains("index"))
+			//		texturesIndex = texturesContent["index"].get<int>();
+			//	std::shared_ptr<Texture> curTexture = textureMap[texturesPath];
+			//	shader->SetUniform(texturesName, texturesIndex);
+			//	curTexture->Bind(texturesIndex);
+			//	curIndex++;
+			//}
 		}
 		const std::shared_ptr<Shader> GetShader()
 		{
 			return this->shader;
+		}
+		const Json GetJson()
+		{
+			return this->paramsJson;
 		}
 	private:
 		std::shared_ptr<Shader> shader;

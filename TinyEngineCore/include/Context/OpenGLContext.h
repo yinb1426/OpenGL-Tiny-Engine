@@ -80,7 +80,7 @@ namespace TinyEngine
 		static void OnScrollCallBack(GLFWwindow* window, double xoffset, double yoffset)
 		{
 			glfwGetWindowUserPointer(window);
-			std::cout << yoffset << std::endl;
+			std::cout << "yoffset: " << yoffset << std::endl;
 		}
 	private:
 		std::unique_ptr<OpenGLWindow> window;

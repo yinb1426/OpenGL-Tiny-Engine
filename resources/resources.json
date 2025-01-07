@@ -14,12 +14,7 @@
             "name": "Rock Shader2",
             "vs": "rock2.vert.glsl",
             "fs": "rock.frag.glsl"
-        }, 
-        {
-            "name": "Cube Shader2",
-            "vs": "cube2.vert.glsl",
-            "fs": "cube2.frag.glsl"
-        },        
+        },
         {
             "name": "Planet Shader",
             "vs": "planet.vert.glsl",
@@ -59,6 +54,10 @@
         {
             "name": "Awesomeface",
             "path": "awesomeface.png"
+        },
+        {
+            "name": "DisplacementMap",
+            "path": "DisplacementMap2.png"
         }
     ],
     "models": [

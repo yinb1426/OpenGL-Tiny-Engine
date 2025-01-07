@@ -36,18 +36,15 @@ namespace TinyEngine
 			screenBuffer = std::make_shared<ScreenBuffer>(width, height);
 			curFramebuffer = std::make_shared<Framebuffer>("Current Framebuffer", screenBuffer->GetWidth(), screenBuffer->GetHeight());
 
-			gSceneManager->SetActiveScene("Planet Scene2"); // Rock在添加后处理效果后显示错误，换成Planet则没有错误
+			gSceneManager->SetActiveScene("Planet Scene2");
 
-			postProcessVolume = std::make_shared<PostProcessVolume>();
+			// postProcessVolume = std::make_shared<PostProcessVolume>();
 		}
 		
 		static Application& GetInstance() { return *sInstance; }
 
 		void Loop()
 		{
-			// std::unique_ptr<VignetteEffect> effect = std::make_unique<VignetteEffect>();
-			// std::unique_ptr<BloomEffect> effect2 = std::make_unique<BloomEffect>();
-
 			while (!gGLContext->ShouldClose())
 			{
 				// state update
@@ -63,10 +60,8 @@ namespace TinyEngine
 				screenBuffer->Unbind();
 				
 				// Post Process Effect
-				postProcessVolume->ApplyEffects(curFramebuffer, screenBuffer);
-
-
-				
+				// postProcessVolume->ApplyEffects(curFramebuffer, screenBuffer);
+	
 				screenBuffer->RenderToScreen();
 				RenderUI();
 
@@ -93,6 +88,6 @@ namespace TinyEngine
 		static Application* sInstance;
 		std::shared_ptr<ScreenBuffer> screenBuffer;
 		std::shared_ptr<Framebuffer> curFramebuffer;
-		std::shared_ptr<PostProcessVolume> postProcessVolume;
+		// std::shared_ptr<PostProcessVolume> postProcessVolume;
 	};
 }
