@@ -32,10 +32,11 @@ namespace TinyEngine
 			gStateManager = std::make_unique<StateManager>();
 			gSceneManager = std::make_unique<SceneManager>();
 			gUIContext = std::make_unique<UIContext>();
-			screenBuffer = std::make_unique<ScreenBuffer>(width, height);
-			curFramebuffer = std::make_unique<Framebuffer>("Current Framebuffer", screenBuffer->GetWidth(), screenBuffer->GetHeight());
 
-			gSceneManager->SetActiveScene("Planet Scene2");
+			screenBuffer = std::make_shared<ScreenBuffer>(width, height);
+			curFramebuffer = std::make_shared<Framebuffer>("Current Framebuffer", screenBuffer->GetWidth(), screenBuffer->GetHeight());
+
+			gSceneManager->SetActiveScene("Planet Scene2"); // Rock在添加后处理效果后显示错误，换成Planet则没有错误
 
 			postProcessVolume = std::make_shared<PostProcessVolume>();
 		}
@@ -44,8 +45,8 @@ namespace TinyEngine
 
 		void Loop()
 		{
-			std::unique_ptr<VignetteEffect> effect = std::make_unique<VignetteEffect>();
-			std::unique_ptr<BloomEffect> effect2 = std::make_unique<BloomEffect>();
+			// std::unique_ptr<VignetteEffect> effect = std::make_unique<VignetteEffect>();
+			// std::unique_ptr<BloomEffect> effect2 = std::make_unique<BloomEffect>();
 
 			while (!gGLContext->ShouldClose())
 			{
@@ -62,9 +63,8 @@ namespace TinyEngine
 				screenBuffer->Unbind();
 				
 				// Post Process Effect
-				//postProcessVolume->ApplyEffects(curFramebuffer.get(), screenBuffer.get());
-				// effect->ApplyEffect(curFramebuffer.get(), screenBuffer.get());
-				effect2->ApplyEffect(curFramebuffer.get(), screenBuffer.get());
+				postProcessVolume->ApplyEffects(curFramebuffer, screenBuffer);
+
 
 				
 				screenBuffer->RenderToScreen();
@@ -91,8 +91,8 @@ namespace TinyEngine
 		}
 	private:
 		static Application* sInstance;
-		std::unique_ptr<ScreenBuffer> screenBuffer;
-		std::unique_ptr<Framebuffer> curFramebuffer;
+		std::shared_ptr<ScreenBuffer> screenBuffer;
+		std::shared_ptr<Framebuffer> curFramebuffer;
 		std::shared_ptr<PostProcessVolume> postProcessVolume;
 	};
 }

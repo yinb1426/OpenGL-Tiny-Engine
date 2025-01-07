@@ -14,7 +14,7 @@ namespace TinyEngine
 	{
 	public:
 		virtual void InitializeEffect() = 0;
-		virtual void ApplyEffect(Framebuffer* curFramebuffer, ScreenBuffer* screenBuffer) = 0;
+		virtual void ApplyEffect(std::shared_ptr<Framebuffer> curFramebuffer, std::shared_ptr<ScreenBuffer> screenBuffer) = 0;
 		void DeleteEffect()
 		{
             glDeleteVertexArrays(1, &quadVAO);

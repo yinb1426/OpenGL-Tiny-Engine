@@ -19,8 +19,8 @@ namespace TinyEngine
 
 		PostProcessVolume()
 		{
-			// effects["VignetteEffect"] = std::make_shared<PostProcessEffectPair>(PostProcessEffectPair({ std::make_shared<VignetteEffect>(), true }));
-			// effects["BloomEffect"] = std::make_shared<PostProcessEffectPair>(PostProcessEffectPair({ std::make_shared<BloomEffect>(), true }));
+			effects["BloomEffect"] = std::make_shared<PostProcessEffectPair>(PostProcessEffectPair({ std::make_shared<BloomEffect>(), true }));
+			effects["VignetteEffect"] = std::make_shared<PostProcessEffectPair>(PostProcessEffectPair({ std::make_shared<VignetteEffect>(), true }));
 		}
 
 		void SetEffectEnabled(std::string name, bool isEnabled)
@@ -33,7 +33,7 @@ namespace TinyEngine
 			return effects[name];
 		}
 
-		void ApplyEffects(Framebuffer* curFramebuffer, ScreenBuffer* screenBuffer)
+		void ApplyEffects(std::shared_ptr<Framebuffer> curFramebuffer, std::shared_ptr<ScreenBuffer> screenBuffer)
 		{
 			for (auto& effect : effects)
 			{

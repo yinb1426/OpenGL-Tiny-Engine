@@ -20,7 +20,7 @@
         },
         {
             "name": "rock",
-            "model": "Rock",
+            "model": "Planet",
             "material": "rock-material2",
             "transform": [
                 {

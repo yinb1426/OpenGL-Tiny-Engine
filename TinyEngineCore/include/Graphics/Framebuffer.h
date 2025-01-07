@@ -44,11 +44,12 @@ namespace TinyEngine
 				this->height = windowHeight;
 
 				glBindFramebuffer(GL_FRAMEBUFFER, fbID);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 				for (int i = 0; i < attachmentNum; i++)
 				{
 					glBindTexture(GL_TEXTURE_2D, textureIDs[i]);
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
 				}
 				if (depthID)
 				{
@@ -131,7 +132,7 @@ namespace TinyEngine
 			{
 				glGenBuffers(1, &textureIDs[i]);
 				glBindTexture(GL_TEXTURE_2D, textureIDs[i]);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMode);
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, textureIDs[i], 0);

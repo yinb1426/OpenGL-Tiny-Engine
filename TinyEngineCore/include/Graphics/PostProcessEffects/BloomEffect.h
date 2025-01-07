@@ -27,7 +27,7 @@ namespace TinyEngine
 			combineShader = gResourceManager->GetShader("Bloom-Combine Shader");
 		}
 
-		void ApplyEffect(Framebuffer* curFramebuffer, ScreenBuffer* screenBuffer)
+		void ApplyEffect(std::shared_ptr<Framebuffer> curFramebuffer, std::shared_ptr<ScreenBuffer> screenBuffer)
 		{
 			brightnessFramebuffer->UpdateFramebuffer();
 			curFramebuffer->UpdateFramebuffer();
@@ -66,15 +66,36 @@ namespace TinyEngine
 			blurShader->Unuse();
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-			brightnessFramebuffer->BlitFramebuffer(screenBuffer);
+			combineShader->Use();
+			combineShader->SetUniform("intensity", intensity);
+			combineShader->SetUniform("albedoScene", 0);
+			combineShader->SetUniform("blurScene", 1);
+			screenBuffer->BindTexture(0);
+			if (amount % 2)
+			{
+				curFramebuffer->BindTexture(1);
+				brightnessFramebuffer->Bind();
+			}
+			else
+			{
+				brightnessFramebuffer->BindTexture(1);
+				curFramebuffer->Bind();
+			}
+			RenderQuad();
+
+			if (amount % 2)
+				brightnessFramebuffer->BlitFramebuffer(screenBuffer.get());
+			else
+				curFramebuffer->BlitFramebuffer(screenBuffer.get());
 		}
 
 	public:
+		float threshold;
+		float intensity;
+	private:
 		std::shared_ptr<Framebuffer> brightnessFramebuffer;
 		std::shared_ptr<Shader> brightnessShader;
 		std::shared_ptr<Shader> blurShader;
 		std::shared_ptr<Shader> combineShader;
-		float threshold;
-		float intensity;
 	};
 }

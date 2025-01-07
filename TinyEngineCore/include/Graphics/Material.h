@@ -58,9 +58,13 @@ namespace TinyEngine
 				std::string texturesNameString = texturesContent["name"].get<std::string>();
 				const char* texturesName = texturesNameString.c_str();
 				std::string texturesPath = texturesContent["path"].get<std::string>();
+				int texturesIndex = curIndex;
+				if(texturesContent.contains("index"))
+					texturesIndex = texturesContent["index"].get<int>();
 				std::shared_ptr<Texture> curTexture = textureMap[texturesPath];
-				shader->SetUniform(texturesName, curIndex);
-				curTexture->Bind(curIndex++);
+				shader->SetUniform(texturesName, texturesIndex);
+				curTexture->Bind(texturesIndex);
+				curIndex++;
 			}
 		}
 		const std::shared_ptr<Shader> GetShader()

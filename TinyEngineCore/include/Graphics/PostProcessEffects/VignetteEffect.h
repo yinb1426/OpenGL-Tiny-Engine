@@ -22,7 +22,7 @@ namespace TinyEngine
             vignetteShader = gResourceManager->GetShader("Vignette Shader");
         }
 
-        void ApplyEffect(Framebuffer* curFramebuffer, ScreenBuffer* screenBuffer)
+        void ApplyEffect(std::shared_ptr<Framebuffer> curFramebuffer, std::shared_ptr<ScreenBuffer> screenBuffer)
         {
             curFramebuffer->UpdateFramebuffer();
             curFramebuffer->Bind();
@@ -37,13 +37,14 @@ namespace TinyEngine
             vignetteShader->Unuse();
             curFramebuffer->Unbind();
 
-            curFramebuffer->BlitFramebuffer(screenBuffer);
+            curFramebuffer->BlitFramebuffer(screenBuffer.get());
         }
     public:
-        std::shared_ptr<Shader> vignetteShader;
         glm::vec4 vignetteColor;
         glm::vec2 center;
         float intensity;
         float smoothness;
+    private:
+        std::shared_ptr<Shader> vignetteShader;
     };
 }

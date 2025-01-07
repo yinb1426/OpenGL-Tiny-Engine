@@ -74,35 +74,45 @@ namespace TinyEngine
 			// Post Process Volume Part
 			if(ImGui::CollapsingHeader("Post Process Volume"))
 			{
-				if (ImGui::CollapsingHeader("Vignette Effect"))
+				if (ImGui::CollapsingHeader("Bloom Effect"))
 				{
-					static bool isVignetteEffectEnabled = volume->effects["VignetteEffect"]->isEnabled;
-					if (ImGui::Checkbox("Enable Vignette Effect", &isVignetteEffectEnabled))
+					ImGui::Checkbox("Enable Bloom Effect", &(volume->effects["BloomEffect"]->isEnabled));
+					if (volume->effects["BloomEffect"]->isEnabled)
 					{
-						volume->effects["VignetteEffect"]->isEnabled = isVignetteEffectEnabled;
-					}
-						
-					if (isVignetteEffectEnabled)
-					{
+						std::shared_ptr<BloomEffect> bloomEffect = std::dynamic_pointer_cast<BloomEffect>(volume->effects["BloomEffect"]->effect);
 
-						std::shared_ptr<VignetteEffect> effect = std::dynamic_pointer_cast<VignetteEffect>(volume->effects["VignetteEffect"]->effect);
-
-						glm::vec4 curVignetteColor = effect->vignetteColor;
-						glm::vec2 curCenter = effect->center;
-						float curIntensity = effect->intensity;
-						float curSmoothness = effect->smoothness;
-
-						ImGui::ColorEdit4("Color", (float*)&curVignetteColor);
-						ImGui::DragFloat2("Center", (float*)&curCenter, 0.01f, 0.0f, 1.0f);
-						ImGui::DragFloat("Intensity", &curIntensity, 0.01f, 0.0f, 1.0f);
-						ImGui::DragFloat("Smoothness", &curSmoothness, 0.01f, 0.0f, 1.0f);
-
-						effect->vignetteColor = curVignetteColor;
-						effect->center = curCenter;
-						effect->intensity = curIntensity;
-						effect->smoothness = curSmoothness;
+						float bloomThreshold = bloomEffect->threshold;
+						float bloomIntensity = bloomEffect->intensity;
+						ImGui::DragFloat("Threshold", &bloomThreshold, 0.01f, 0.1f, 1.5f);
+						ImGui::DragFloat("Bloom Intensity", &bloomIntensity, 0.01f, 0.1f, 3.0f);
+						bloomEffect->threshold = bloomThreshold;
+						bloomEffect->intensity = bloomIntensity;
 					}
 				}
+				if (ImGui::CollapsingHeader("Vignette Effect"))
+				{
+					ImGui::Checkbox("Enable Vignette Effect", &(volume->effects["VignetteEffect"]->isEnabled));				
+					if (volume->effects["VignetteEffect"]->isEnabled)
+					{
+						std::shared_ptr<VignetteEffect> vignetteEffect = std::dynamic_pointer_cast<VignetteEffect>(volume->effects["VignetteEffect"]->effect);
+
+						glm::vec4 vignetteColor = vignetteEffect->vignetteColor;
+						glm::vec2 vignetteCenter = vignetteEffect->center;
+						float vignetteIntensity = vignetteEffect->intensity;
+						float vignetteSmoothness = vignetteEffect->smoothness;
+
+						ImGui::ColorEdit4("Color", (float*)&vignetteColor);
+						ImGui::DragFloat2("Center", (float*)&vignetteCenter, 0.01f, 0.0f, 1.0f);
+						ImGui::DragFloat("Vignette Intensity", &vignetteIntensity, 0.01f, 0.0f, 1.0f);
+						ImGui::DragFloat("Smoothness", &vignetteSmoothness, 0.01f, 0.0f, 1.0f);
+
+						vignetteEffect->vignetteColor = vignetteColor;
+						vignetteEffect->center = vignetteCenter;
+						vignetteEffect->intensity = vignetteIntensity;
+						vignetteEffect->smoothness = vignetteSmoothness;
+					}
+				}
+				
 			}
 
 			ImGui::End();			
