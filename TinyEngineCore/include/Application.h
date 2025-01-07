@@ -10,6 +10,7 @@
 #include "Graphics/Texture.h"
 #include "Graphics/ScreenBuffer.h"
 #include "Geometry/Model.h"
+#include "Graphics/PostProcessVolume.h"
 #include <iostream>
 
 namespace TinyEngine 
@@ -30,8 +31,12 @@ namespace TinyEngine
 			gStateManager = std::make_unique<StateManager>();
 			gSceneManager = std::make_unique<SceneManager>();
 			gUIContext = std::make_unique<UIContext>();
-			screenBuffer = std::make_unique<ScreenBuffer>(width, height);
+			postProcessVolume = std::make_shared<PostProcessVolume>();
 
+			screenBuffer = std::make_shared<ScreenBuffer>(width, height);
+			for (int i = 0; i < 4; i++)
+				framebuffers[i] = std::make_shared<Framebuffer>("Framebuffers" + std::to_string(i), screenBuffer->GetWidth(), screenBuffer->GetWidth(), 1, false);
+			
 			gSceneManager->SetActiveScene("Planet Scene2");
 		}
 		
@@ -39,11 +44,17 @@ namespace TinyEngine
 
 		void Loop()
 		{
+			// Initialize Step
+			postProcessVolume->InitializeEffect();
+			postProcessVolume->SetEffectEnabled("BloomEffect", true);
+			postProcessVolume->SetEffectEnabled("VignetteEffect", true);
+
+
 			while (!gGLContext->ShouldClose())
 			{
 				// state update
 				gStateManager->Enable(GL_DEPTH_TEST);
-				screenBuffer->UpdateFrameBuffer();
+				// screenBuffer->UpdateFrameBuffer();
 
 				// render
 				// Tick -> TickLogic: 更新所有物体的信息; TickRender: 渲染所有物体
@@ -52,8 +63,13 @@ namespace TinyEngine
 				TickLogic();
 				TickRender();
 				screenBuffer->Unbind();
-				
+
+				// Post Process
+				postProcessVolume->ApplyEffects(framebuffers, screenBuffer);
+
 				screenBuffer->RenderToScreen();
+
+				RenderUI();
 
 				// Swap Buffer and Poll Event
 				gGLContext->SwapBuffersAndPollEvents();
@@ -63,42 +79,20 @@ namespace TinyEngine
 	private:
 		void TickLogic()
 		{
-			gUIContext->Tick(gSceneManager->GetActiveSceneCamera());
+			gUIContext->Tick(gSceneManager->GetActiveSceneCamera(), postProcessVolume.get());
 		}
 		void TickRender()
 		{
 			gSceneManager->Render();
-			gUIContext->Render();
 		}
-		void RenderQuad()
+		void RenderUI()
 		{
-			unsigned int quadVAO = 0, quadVBO = 0;
-			if (quadVAO == 0)
-			{
-				float quadVertices[] = {
-					// positions        // texture Coords
-					-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-					-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-					 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-					 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-				};
-				// setup plane VAO
-				glGenVertexArrays(1, &quadVAO);
-				glGenBuffers(1, &quadVBO);
-				glBindVertexArray(quadVAO);
-				glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-				glEnableVertexAttribArray(0);
-				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-				glEnableVertexAttribArray(1);
-				glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-			}
-			glBindVertexArray(quadVAO);
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			glBindVertexArray(0);
+			gUIContext->Render();
 		}
 	private:
 		static Application* sInstance;
-		std::unique_ptr<ScreenBuffer> screenBuffer;
+		std::shared_ptr<ScreenBuffer> screenBuffer;
+		std::shared_ptr<Framebuffer> framebuffers[4];
+		std::shared_ptr<PostProcessVolume> postProcessVolume;
 	};
 }

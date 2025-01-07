@@ -89,7 +89,7 @@ namespace TinyEngine
 
 		int nrChannels;
 		unsigned char* data = stbi_load(texturePath, &this->width, &this->height, &nrChannels, 0);
-		unsigned int textureFormat = GL_RGBA;
+		unsigned int textureFormat = GL_RGB;
 		if (nrChannels == 1) textureFormat = GL_RED;
 		else if (nrChannels == 3) textureFormat = GL_RGB;
 		else if (nrChannels == 4) textureFormat = GL_RGBA;

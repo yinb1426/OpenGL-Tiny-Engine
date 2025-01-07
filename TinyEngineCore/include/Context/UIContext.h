@@ -1,11 +1,12 @@
 #pragma once
-#include "Manager/StateManager.h"
 #include "Graphics/Camera.h"
+#include "Graphics/PostProcessVolume.h"
+#include "Manager/StateManager.h"
 #include <3rd/glad/glad.h>
 #include <3rd/GLFW/glfw3.h>
-#include <3rd/imgui/imgui.h>
 #include <3rd/imgui/backends/imgui_impl_glfw.h>
 #include <3rd/imgui/backends/imgui_impl_opengl3.h>
+#include <3rd/imgui/imgui.h>
 
 namespace TinyEngine
 {
@@ -36,7 +37,7 @@ namespace TinyEngine
 			ImGui_ImplOpenGL3_Init("#version 430 core");
 		}
 
-		void Tick(std::shared_ptr<Camera> sceneCamera)
+		void Tick(std::shared_ptr<Camera> sceneCamera, PostProcessVolume* volume) // TODO: Add PostProcessVolume GUI
 		{
 			// Initialize ImGui
 			ImGui_ImplOpenGL3_NewFrame();
