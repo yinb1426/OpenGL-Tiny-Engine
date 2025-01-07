@@ -23,17 +23,20 @@ namespace TinyEngine
 			vertices(vertices), indices(indices), textures(textures), vertexArray(VertexArray(vertices, indices))
 		{}
 
-		void Draw(std::shared_ptr<Shader> shader, TextureMap textureMap)
+		void Draw(std::shared_ptr<Material> material, TextureMap textureMap)
 		{
+			std::shared_ptr<Shader> shader = material->GetShader();
+
 			// bind appropriate textures
 			unsigned int diffuseNr = 1;
 			unsigned int specularNr = 1;
 			unsigned int normalNr = 1;
 			unsigned int heightNr = 1;
-			for (unsigned int i = 0; i < textures.size(); i++)
+			int index = 0;
+			for (index = 0; index < textures.size(); index++)
 			{
 				std::string number;
-				std::string type = textures[i].type;
+				std::string type = textures[index].type;
 				if (type == "texture_diffuse")
 					number = std::to_string(diffuseNr++);
 				else if (type == "texture_specular")
@@ -43,25 +46,42 @@ namespace TinyEngine
 				else if (type == "texture_height")
 					number = std::to_string(heightNr++); // transfer unsigned int to string
 
-				// now set the sampler to the correct texture unit
-				
-				shader->SetUniform((type + number).c_str(), (int)i);
-				textureMap[textures[i].name]->Bind(i);
+				shader->SetUniform((type + number).c_str(), index);
+				textureMap[textures[index].name]->Bind(index);
+			}
+			const auto& paramsJson = material->GetJson();
+			if (paramsJson.contains("textures"))
+			{
+				const auto& textures = paramsJson["textures"];
+				for (auto& iterator : textures.items())
+				{
+					auto& texturesContent = iterator.value();
+					std::string texturesNameString = texturesContent["name"].get<std::string>();
+					const char* texturesName = texturesNameString.c_str();
+					std::string texturesPath = texturesContent["path"].get<std::string>();
+					std::shared_ptr<Texture> curTexture = textureMap[texturesPath];
+					shader->SetUniform(texturesName, index);
+					curTexture->Bind(index);
+					index++;
+				}
 			}
 			vertexArray.Draw();
 		}
 
-		void DrawInstanced(std::shared_ptr<Shader> shader, TextureMap textureMap, std::vector<glm::mat4> modelMatrices)
+		void DrawInstanced(std::shared_ptr<Material> material, TextureMap textureMap, std::vector<glm::mat4> modelMatrices)
 		{
+			std::shared_ptr<Shader> shader = material->GetShader();
+
 			// bind appropriate textures
 			unsigned int diffuseNr = 1;
 			unsigned int specularNr = 1;
 			unsigned int normalNr = 1;
 			unsigned int heightNr = 1;
-			for (unsigned int i = 0; i < textures.size(); i++)
+			int index = 0;
+			for (index = 0; index < textures.size(); index++)
 			{
 				std::string number;
-				std::string type = textures[i].type;
+				std::string type = textures[index].type;
 				if (type == "texture_diffuse")
 					number = std::to_string(diffuseNr++);
 				else if (type == "texture_specular")
@@ -72,8 +92,24 @@ namespace TinyEngine
 					number = std::to_string(heightNr++); // transfer unsigned int to string
 
 				// now set the sampler to the correct texture unit
-				shader->SetUniform((type + number).c_str(), (int)i);
-				textureMap[textures[i].name]->Bind(i);
+				shader->SetUniform((type + number).c_str(), index);
+				textureMap[textures[index].name]->Bind(index);
+			}
+			const auto& paramsJson = material->GetJson();
+			if (paramsJson.contains("textures"))
+			{
+				const auto& textures = paramsJson["textures"];
+				for (auto& iterator : textures.items())
+				{
+					auto& texturesContent = iterator.value();
+					std::string texturesNameString = texturesContent["name"].get<std::string>();
+					const char* texturesName = texturesNameString.c_str();
+					std::string texturesPath = texturesContent["path"].get<std::string>();
+					std::shared_ptr<Texture> curTexture = textureMap[texturesPath];
+					shader->SetUniform(texturesName, index);
+					curTexture->Bind(index);
+					index++;
+				}
 			}
 
 			// Create instancedMatricesBuffer
@@ -90,7 +126,6 @@ namespace TinyEngine
 			glVertexAttribDivisor(9, 1);
 			glVertexAttribDivisor(10, 1);
 			vertexArray.Unbind();
-			std::cout << modelMatrices.size() << std::endl;
 			vertexArray.DrawInstanced(modelMatrices.size());
 		}
 	private:

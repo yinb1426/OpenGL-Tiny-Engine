@@ -21,8 +21,8 @@ namespace TinyEngine
 			glm::mat4 viewMatrix = camera.GetViewMatrix();
 			glm::mat4 projectionMatrix = camera.GetProjectionMatrix(gGLContext->GetWindowAspect());
 			material->SetMatrices(modelMatrix, viewMatrix, projectionMatrix);
-			material->SetUniform(gResourceManager->GetTextureMap());
-			model->Draw(material->GetShader(), gResourceManager->GetTextureMap(), transforms);
+			material->SetUniform();
+			model->Draw(material, gResourceManager->GetTextureMap(), transforms);
 		}
 	};
 

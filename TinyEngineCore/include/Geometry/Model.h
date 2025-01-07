@@ -22,18 +22,18 @@ namespace TinyEngine
 
 		~Model() {}
 
-		void Draw(std::shared_ptr<Shader> shader, TextureMap textureMap, std::vector<Transform> transforms)
+		void Draw(std::shared_ptr<Material> material, TextureMap textureMap, std::vector<Transform> transforms)
 		{
 			for (auto& mesh : meshes)
 			{
 				if (transforms.size() == 1)
-					mesh.Draw(shader, textureMap);
+					mesh.Draw(material, textureMap);
 				else
 				{
 					std::vector<glm::mat4> modelMatrices;
 					for (auto& transform : transforms)
 						modelMatrices.push_back(transform.GetModelMatrix());
-					mesh.DrawInstanced(shader, textureMap, modelMatrices);
+					mesh.DrawInstanced(material, textureMap, modelMatrices);
 				}
 			}
 		}
