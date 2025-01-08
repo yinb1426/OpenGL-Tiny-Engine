@@ -56,19 +56,19 @@ namespace TinyEngine
 			// Camera Part
 			if (ImGui::CollapsingHeader("Camera"))
 			{
-				glm::vec3 curCamPos = sceneCamera->position;
-				float curCamPitch = sceneCamera->pitch;
-				float curCamYaw = sceneCamera->yaw;
-				float curCamZNear = sceneCamera->zNear;
-				float curCamZFar = sceneCamera->zFar;
+				glm::vec3 camPos = sceneCamera->position;
+				float camPitch = sceneCamera->pitch;
+				float camYaw = sceneCamera->yaw;
+				float camZNear = sceneCamera->zNear;
+				float camZFar = sceneCamera->zFar;
 
-				ImGui::DragFloat3("Position", (float*)&curCamPos, 0.1f);
-				ImGui::DragFloat("Pitch", &curCamPitch, 0.1f, -MAX_ABS_PITCH, MAX_ABS_PITCH);
-				ImGui::DragFloat("Yaw", &curCamYaw, 0.1f);
-				ImGui::DragFloat("Near Plane", &curCamZNear, 0.1f);
-				ImGui::DragFloat("Far Plane", &curCamZFar, 0.1f);
+				ImGui::DragFloat3("Position", (float*)&camPos, 0.1f);
+				ImGui::DragFloat("Pitch", &camPitch, 0.1f, -MAX_ABS_PITCH, MAX_ABS_PITCH);
+				ImGui::DragFloat("Yaw", &camYaw, 0.1f);
+				ImGui::DragFloat("Near Plane", &camZNear, 0.1f);
+				ImGui::DragFloat("Far Plane", &camZFar, 0.1f);
 
-				sceneCamera->UpdateCameraParams(curCamPos, curCamPitch, curCamYaw, curCamZNear, curCamZFar);
+				sceneCamera->UpdateCameraParams(camPos, camPitch, camYaw, camZNear, camZFar);
 			}
 
 			// Post Process Volume Part

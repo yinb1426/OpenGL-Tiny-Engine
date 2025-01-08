@@ -28,7 +28,9 @@ namespace TinyEngine
 
 		void ApplyEffect(std::shared_ptr<Framebuffer> framebuffers[], std::shared_ptr<ScreenBuffer> screenBuffer)
 		{
-			framebuffers[2]->UpdateFramebuffer();
+			for (int i = 0; i < 3; i++)
+				framebuffers[i]->UpdateFramebuffer();
+			screenBuffer->UpdateFramebuffer();
 
 			framebuffers[2]->Bind();
 			glClear(GL_COLOR_BUFFER_BIT);
