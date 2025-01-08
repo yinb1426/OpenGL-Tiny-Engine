@@ -44,6 +44,11 @@
             "name": "Bloom-Combine Shader",
             "vs": "postprocess.vert.glsl",
             "fs": "bloom-combine.frag.glsl"
+        },
+        {
+            "name": "White Balance Shader",
+            "vs": "postprocess.vert.glsl",
+            "fs": "white-balance.frag.glsl"
         }
     ],
     "textures": [

@@ -50,9 +50,6 @@ namespace TinyEngine
 		{
 			// Initialize Step
 			postProcessVolume->InitializeEffect();
-			postProcessVolume->SetEffectEnabled("BloomEffect", true);
-			postProcessVolume->SetEffectEnabled("VignetteEffect", true);
-
 
 			while (!gGLContext->ShouldClose())
 			{
@@ -72,7 +69,6 @@ namespace TinyEngine
 				postProcessVolume->ApplyEffects(framebuffers, screenBuffer);
 
 				screenBuffer->RenderToScreen();
-				RenderUI();
 
 				RenderUI();
 
