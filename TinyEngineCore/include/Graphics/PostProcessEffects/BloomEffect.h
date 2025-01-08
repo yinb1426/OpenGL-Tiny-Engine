@@ -15,16 +15,15 @@ namespace TinyEngine
 
 		~BloomEffect()
 		{
-			brightnessFramebuffer->DeleteFramebuffer();
 			DeleteEffect();
 		}
 
 		void InitializeEffect()
 		{
 			InitializeQuad();
-			brightnessShader = gResourceManager->GetShader("Bloom-Brightness Shader").get();
-			blurShader = gResourceManager->GetShader("Bloom-Blur Shader").get();
-			combineShader = gResourceManager->GetShader("Bloom-Combine Shader").get();
+			brightnessShader = gResourceManager->GetShader("Bloom-Brightness Shader");
+			blurShader = gResourceManager->GetShader("Bloom-Blur Shader");
+			combineShader = gResourceManager->GetShader("Bloom-Combine Shader");
 		}
 
 		void ApplyEffect(std::shared_ptr<Framebuffer> framebuffers[], std::shared_ptr<ScreenBuffer> screenBuffer)
@@ -80,8 +79,8 @@ namespace TinyEngine
 		float threshold;
 		float intensity;
 	private:
-		Shader* brightnessShader;
-		Shader* blurShader;
-		Shader* combineShader;
+		std::shared_ptr<Shader> brightnessShader;
+		std::shared_ptr<Shader> blurShader;
+		std::shared_ptr<Shader> combineShader;
 	};
 }

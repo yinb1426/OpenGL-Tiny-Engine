@@ -49,36 +49,6 @@ namespace TinyEngine
 				for (int i = 0; i < attachmentNum; i++)
 				{
 					glBindTexture(GL_TEXTURE_2D, textureIDs[i]);
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
-					glBindTexture(GL_TEXTURE_2D, 0);
-				}
-				if (depthID)
-				{
-					glBindRenderbuffer(GL_RENDERBUFFER, depthID);
-					glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, windowWidth, windowHeight);
-					glBindRenderbuffer(GL_RENDERBUFFER, 0);
-				}
-
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			}
-		}
-
-		void UpdateFramebuffer()
-		{
-			unsigned int windowWidth, windowHeight;
-			gGLContext->GetWindowWidthAndHeight(windowWidth, windowHeight);
-
-			if (windowWidth != width || windowHeight != height)
-			{
-				this->width = windowWidth;
-				this->height = windowHeight;
-
-				glBindFramebuffer(GL_FRAMEBUFFER, fbID);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-				for (int i = 0; i < attachmentNum; i++)
-				{
-					glBindTexture(GL_TEXTURE_2D, textureIDs[i]);
 					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
 				}
 				if (depthID)
