@@ -89,6 +89,21 @@ namespace TinyEngine
 						bloomEffect->intensity = bloomIntensity;
 					}
 				}
+				if (ImGui::CollapsingHeader("White Balance Effect"))
+				{
+					ImGui::Checkbox("Enable White Balance Effect", &(volume->effects["WhiteBalanceEffect"]->isEnabled));
+					if (volume->effects["WhiteBalanceEffect"]->isEnabled)
+					{
+						std::shared_ptr<WhiteBalanceEffect> whiteBalanceEffect = std::dynamic_pointer_cast<WhiteBalanceEffect>(volume->effects["WhiteBalanceEffect"]);
+
+						float whiteBalanceTemperature = whiteBalanceEffect->temperature;
+						float whiteBalanceTint = whiteBalanceEffect->tint;
+						ImGui::DragFloat("Temperature", &whiteBalanceTemperature, 0.1f, -100.0f, 100.0f);
+						ImGui::DragFloat("Tint", &whiteBalanceTint, 0.1f, -100.0f, 100.0f);
+						whiteBalanceEffect->temperature = whiteBalanceTemperature;
+						whiteBalanceEffect->tint = whiteBalanceTint;
+					}
+				}
 				if (ImGui::CollapsingHeader("Vignette Effect"))
 				{
 					ImGui::Checkbox("Enable Vignette Effect", &(volume->effects["VignetteEffect"]->isEnabled));

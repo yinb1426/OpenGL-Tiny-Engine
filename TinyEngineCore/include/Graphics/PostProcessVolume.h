@@ -1,6 +1,7 @@
 #pragma once
 #include "Graphics/PostProcessEffects/VignetteEffect.h"
 #include "Graphics/PostProcessEffects/BloomEffect.h"
+#include "Graphics/PostProcessEffects/WhiteBalanceEffect.h"
 #include <unordered_map>
 #include <memory>
 #include <string>
@@ -15,6 +16,7 @@ namespace TinyEngine
 		void InitializeEffect()
 		{
 			effects["BloomEffect"] = std::make_shared<BloomEffect>();
+			effects["WhiteBalanceEffect"] = std::make_shared<WhiteBalanceEffect>();
 			effects["VignetteEffect"] = std::make_shared<VignetteEffect>();
 		}
 
