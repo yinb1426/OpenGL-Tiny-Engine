@@ -1,5 +1,5 @@
 #pragma once
-#include "Graphics/Framebuffer.h"
+#include "Manager/ResourceManager.h"
 #include "Graphics/PostProcessEffects/PostProcessEffect.h"
 
 namespace TinyEngine
@@ -10,6 +10,7 @@ namespace TinyEngine
 		BloomEffect() : threshold(0.5f), intensity(1.5f)
 		{
 			InitializeEffect();
+			isEnabled = false;
 		}
 
 		~BloomEffect()
@@ -21,17 +22,16 @@ namespace TinyEngine
 		void InitializeEffect()
 		{
 			InitializeQuad();
-			brightnessFramebuffer = std::make_shared<Framebuffer>("Brightness Framebuffer", 1200, 800, 1, false);
-			brightnessShader = gResourceManager->GetShader("Bloom-Brightness Shader");
-			blurShader = gResourceManager->GetShader("Bloom-Blur Shader");
-			combineShader = gResourceManager->GetShader("Bloom-Combine Shader");
+			brightnessShader = gResourceManager->GetShader("Bloom-Brightness Shader").get();
+			blurShader = gResourceManager->GetShader("Bloom-Blur Shader").get();
+			combineShader = gResourceManager->GetShader("Bloom-Combine Shader").get();
 		}
 
-		void ApplyEffect(std::shared_ptr<Framebuffer> curFramebuffer, std::shared_ptr<ScreenBuffer> screenBuffer)
+		void ApplyEffect(std::shared_ptr<Framebuffer> framebuffers[], std::shared_ptr<ScreenBuffer> screenBuffer)
 		{
-			brightnessFramebuffer->UpdateFramebuffer();
+			framebuffers[2]->UpdateFramebuffer();
 
-			brightnessFramebuffer->Bind();
+			framebuffers[2]->Bind();
 			glClear(GL_COLOR_BUFFER_BIT);
 			brightnessShader->Use();
 			brightnessShader->SetUniform("threshold", threshold);
@@ -39,29 +39,26 @@ namespace TinyEngine
 			screenBuffer->BindTexture(0);
 			RenderQuad();
 			brightnessShader->Unuse();
-			brightnessFramebuffer->Unbind();
+			framebuffers[2]->Unbind();
 
-			curFramebuffer->UpdateFramebuffer();
-			bool horizontal = true;
+			bool horizontal = true, firstIteration = true;
 			unsigned int amount = 10;
 			blurShader->Use();
 			blurShader->SetUniform("albedo", 0);
 			for (unsigned int i = 0; i < amount; i++)
 			{
+				framebuffers[horizontal]->Bind();
+				glClear(GL_COLOR_BUFFER_BIT);
 				blurShader->SetUniform("horizontal", horizontal);
-				if (horizontal)
-				{
-					curFramebuffer->Bind();
-					brightnessFramebuffer->BindTexture(0);
-				}
+				RenderQuad();
+				if (firstIteration)
+					framebuffers[2]->BindTexture(0);
 				else
-				{
-					brightnessFramebuffer->Bind();
-					curFramebuffer->BindTexture(0);
-				}
+					framebuffers[!horizontal]->BindTexture(0);
 				RenderQuad();
 				horizontal = !horizontal;
-
+				if (firstIteration)
+					firstIteration = false;
 			}
 			blurShader->Unuse();
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -71,31 +68,20 @@ namespace TinyEngine
 			combineShader->SetUniform("albedoScene", 0);
 			combineShader->SetUniform("blurScene", 1);
 			screenBuffer->BindTexture(0);
-			if (amount % 2)
-			{
-				curFramebuffer->BindTexture(1);
-				brightnessFramebuffer->Bind();
-			}
-			else
-			{
-				brightnessFramebuffer->BindTexture(1);
-				curFramebuffer->Bind();
-			}
+			framebuffers[!horizontal]->BindTexture(1);
+			framebuffers[horizontal]->Bind();
 			RenderQuad();
-
-			if (amount % 2)
-				brightnessFramebuffer->BlitFramebuffer(screenBuffer.get());
-			else
-				curFramebuffer->BlitFramebuffer(screenBuffer.get());
+			combineShader->Unuse();
+			framebuffers[horizontal]->BlitFramebuffer(screenBuffer.get());
+			framebuffers[horizontal]->Unbind();
 		}
 
 	public:
 		float threshold;
 		float intensity;
 	private:
-		std::shared_ptr<Framebuffer> brightnessFramebuffer;
-		std::shared_ptr<Shader> brightnessShader;
-		std::shared_ptr<Shader> blurShader;
-		std::shared_ptr<Shader> combineShader;
+		Shader* brightnessShader;
+		Shader* blurShader;
+		Shader* combineShader;
 	};
 }

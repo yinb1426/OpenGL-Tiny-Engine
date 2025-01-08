@@ -1,5 +1,7 @@
 {
   "textures": [
-
+      "name": "texture_diffuse1",
+      "path": "planet_Quom1200"
+    }
   ]
 }

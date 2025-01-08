@@ -65,7 +65,6 @@ namespace TinyEngine
 					index++;
 				}
 			}
-
 			vertexArray.Draw();
 		}
 

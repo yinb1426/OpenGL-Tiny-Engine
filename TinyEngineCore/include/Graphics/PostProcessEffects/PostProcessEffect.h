@@ -13,16 +13,20 @@ namespace TinyEngine
 	class PostProcessEffect
 	{
 	public:
+        PostProcessEffect() = default;
+        virtual ~PostProcessEffect() = default;
 		virtual void InitializeEffect() = 0;
-		virtual void ApplyEffect(std::shared_ptr<Framebuffer> curFramebuffer, std::shared_ptr<ScreenBuffer> screenBuffer) = 0;
-		void DeleteEffect()
-		{
+		virtual void ApplyEffect(std::shared_ptr<Framebuffer> framebuffers[], std::shared_ptr<ScreenBuffer> screenBuffer) = 0;
+        void DeleteEffect() const
+        {
             glDeleteVertexArrays(1, &quadVAO);
             glDeleteBuffers(1, &quadVBO);
-		}
-	protected: 
-		void InitializeQuad()
-		{
+        }
+    public:
+        bool isEnabled;
+    protected:
+        void InitializeQuad()
+        {
             float quadVertices[] = {
                 // positions        // texture Coords
                 -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
@@ -42,14 +46,14 @@ namespace TinyEngine
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
             glBindVertexArray(0);
-		}
+        }
         void RenderQuad()
         {
             glBindVertexArray(quadVAO);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
             glBindVertexArray(0);
         }
-	protected:
-		unsigned int quadVAO, quadVBO;
+    protected:
+        unsigned int quadVAO, quadVBO;
 	};
 }

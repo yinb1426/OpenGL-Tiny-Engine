@@ -11,6 +11,7 @@
 #include "Graphics/ScreenBuffer.h"
 #include "Graphics/PostProcessVolume.h"
 #include "Geometry/Model.h"
+#include "Graphics/PostProcessVolume.h"
 #include <iostream>
 
 
@@ -32,10 +33,12 @@ namespace TinyEngine
 			gStateManager = std::make_unique<StateManager>();
 			gSceneManager = std::make_unique<SceneManager>();
 			gUIContext = std::make_unique<UIContext>();
+			postProcessVolume = std::make_shared<PostProcessVolume>();
 
 			screenBuffer = std::make_shared<ScreenBuffer>(width, height);
-			curFramebuffer = std::make_shared<Framebuffer>("Current Framebuffer", screenBuffer->GetWidth(), screenBuffer->GetHeight());
-
+			for (int i = 0; i < 4; i++)
+				framebuffers[i] = std::make_shared<Framebuffer>("Framebuffers" + std::to_string(i), screenBuffer->GetWidth(), screenBuffer->GetWidth(), 1, false);
+			
 			gSceneManager->SetActiveScene("Planet Scene2");
 
 			// postProcessVolume = std::make_shared<PostProcessVolume>();
@@ -45,11 +48,17 @@ namespace TinyEngine
 
 		void Loop()
 		{
+			// Initialize Step
+			postProcessVolume->InitializeEffect();
+			postProcessVolume->SetEffectEnabled("BloomEffect", true);
+			postProcessVolume->SetEffectEnabled("VignetteEffect", true);
+
+
 			while (!gGLContext->ShouldClose())
 			{
 				// state update
 				gStateManager->Enable(GL_DEPTH_TEST);
-				screenBuffer->UpdateFramebuffer();
+				// screenBuffer->UpdateFrameBuffer();
 
 				// Render Scene
 				// Tick -> TickLogic: 更新所有物体的信息; TickRender: 渲染所有物体
@@ -58,11 +67,13 @@ namespace TinyEngine
 				TickLogic();
 				TickRender();
 				screenBuffer->Unbind();
-				
-				// Post Process Effect
-				// postProcessVolume->ApplyEffects(curFramebuffer, screenBuffer);
-	
+
+				// Post Process
+				postProcessVolume->ApplyEffects(framebuffers, screenBuffer);
+
 				screenBuffer->RenderToScreen();
+				RenderUI();
+
 				RenderUI();
 
 				// Swap Buffer and Poll Event
@@ -78,7 +89,6 @@ namespace TinyEngine
 		void TickRender()
 		{
 			gSceneManager->Render();
-			
 		}
 		void RenderUI()
 		{
@@ -87,7 +97,7 @@ namespace TinyEngine
 	private:
 		static Application* sInstance;
 		std::shared_ptr<ScreenBuffer> screenBuffer;
-		std::shared_ptr<Framebuffer> curFramebuffer;
-		// std::shared_ptr<PostProcessVolume> postProcessVolume;
+		std::shared_ptr<Framebuffer> framebuffers[4];
+		std::shared_ptr<PostProcessVolume> postProcessVolume;
 	};
 }

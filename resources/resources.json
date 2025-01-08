@@ -48,16 +48,20 @@
     ],
     "textures": [
         {
-            "name": "Container",
-            "path": "container.jpg"
-        },
-        {
             "name": "Awesomeface",
             "path": "awesomeface.png"
         },
         {
-            "name": "DisplacementMap",
+            "name": "Displacement",
             "path": "DisplacementMap2.png"
+        },
+        {
+            "name": "Normal3",
+            "path": "normal3.png"
+        },
+        {
+            "name": "dky",
+            "path": "dky.png"
         }
     ],
     "models": [

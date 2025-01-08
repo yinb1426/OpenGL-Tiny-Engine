@@ -9,18 +9,18 @@ namespace TinyEngine
 {
 	struct PostProcessVolume
 	{
-		struct PostProcessEffectPair
-		{
-			std::shared_ptr<PostProcessEffect> effect;
-			bool isEnabled;
-		};
+		std::unordered_map<std::string, std::shared_ptr<PostProcessEffect>> effects;
+		PostProcessVolume(){ }
 
-		std::unordered_map<std::string, std::shared_ptr<PostProcessEffectPair>> effects;
-
-		PostProcessVolume()
+		void InitializeEffect()
 		{
-			effects["BloomEffect"] = std::make_shared<PostProcessEffectPair>(PostProcessEffectPair({ std::make_shared<BloomEffect>(), true }));
-			effects["VignetteEffect"] = std::make_shared<PostProcessEffectPair>(PostProcessEffectPair({ std::make_shared<VignetteEffect>(), true }));
+			effects["BloomEffect"] = std::make_shared<BloomEffect>();
+			effects["VignetteEffect"] = std::make_shared<VignetteEffect>();
+		}
+
+		void AddEffect(std::string name, std::shared_ptr<PostProcessEffect>&& effect)
+		{
+			effects[name] = effect;
 		}
 
 		void SetEffectEnabled(std::string name, bool isEnabled)
@@ -28,17 +28,17 @@ namespace TinyEngine
 			effects[name]->isEnabled = isEnabled;
 		}
 
-		std::shared_ptr<PostProcessEffectPair> GetPostProcessEffect(std::string name)
+		std::shared_ptr<PostProcessEffect> GetPostProcessEffect(std::string name)
 		{
 			return effects[name];
 		}
 
-		void ApplyEffects(std::shared_ptr<Framebuffer> curFramebuffer, std::shared_ptr<ScreenBuffer> screenBuffer)
+		void ApplyEffects(std::shared_ptr<Framebuffer> framebuffers[], std::shared_ptr<ScreenBuffer> screenBuffer)
 		{
 			for (auto& effect : effects)
 			{
 				if (effect.second->isEnabled)
-					effect.second->effect->ApplyEffect(curFramebuffer, screenBuffer);
+					effect.second->ApplyEffect(framebuffers, screenBuffer);
 			}
 		}
 	};

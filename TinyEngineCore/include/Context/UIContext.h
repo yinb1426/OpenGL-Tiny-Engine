@@ -1,12 +1,12 @@
 #pragma once
-#include "Manager/StateManager.h"
 #include "Graphics/Camera.h"
 #include "Graphics/PostProcessVolume.h"
+#include "Manager/StateManager.h"
 #include <3rd/glad/glad.h>
 #include <3rd/GLFW/glfw3.h>
-#include <3rd/imgui/imgui.h>
 #include <3rd/imgui/backends/imgui_impl_glfw.h>
 #include <3rd/imgui/backends/imgui_impl_opengl3.h>
+#include <3rd/imgui/imgui.h>
 
 namespace TinyEngine
 {
@@ -72,14 +72,14 @@ namespace TinyEngine
 			}
 
 			// Post Process Volume Part
-			if(ImGui::CollapsingHeader("Post Process Volume"))
+			if (ImGui::CollapsingHeader("Post Process Volume"))
 			{
 				if (ImGui::CollapsingHeader("Bloom Effect"))
 				{
 					ImGui::Checkbox("Enable Bloom Effect", &(volume->effects["BloomEffect"]->isEnabled));
 					if (volume->effects["BloomEffect"]->isEnabled)
 					{
-						std::shared_ptr<BloomEffect> bloomEffect = std::dynamic_pointer_cast<BloomEffect>(volume->effects["BloomEffect"]->effect);
+						std::shared_ptr<BloomEffect> bloomEffect = std::dynamic_pointer_cast<BloomEffect>(volume->effects["BloomEffect"]);
 
 						float bloomThreshold = bloomEffect->threshold;
 						float bloomIntensity = bloomEffect->intensity;
@@ -91,10 +91,10 @@ namespace TinyEngine
 				}
 				if (ImGui::CollapsingHeader("Vignette Effect"))
 				{
-					ImGui::Checkbox("Enable Vignette Effect", &(volume->effects["VignetteEffect"]->isEnabled));				
+					ImGui::Checkbox("Enable Vignette Effect", &(volume->effects["VignetteEffect"]->isEnabled));
 					if (volume->effects["VignetteEffect"]->isEnabled)
 					{
-						std::shared_ptr<VignetteEffect> vignetteEffect = std::dynamic_pointer_cast<VignetteEffect>(volume->effects["VignetteEffect"]->effect);
+						std::shared_ptr<VignetteEffect> vignetteEffect = std::dynamic_pointer_cast<VignetteEffect>(volume->effects["VignetteEffect"]);
 
 						glm::vec4 vignetteColor = vignetteEffect->vignetteColor;
 						glm::vec2 vignetteCenter = vignetteEffect->center;
@@ -112,10 +112,10 @@ namespace TinyEngine
 						vignetteEffect->smoothness = vignetteSmoothness;
 					}
 				}
-				
+
 			}
 
-			ImGui::End();			
+			ImGui::End();
 		}
 
 		void Render()
