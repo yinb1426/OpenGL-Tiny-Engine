@@ -7,15 +7,15 @@
 * UI设置参数：使用ImGUI，对当前画面的背景颜色、相机参数、后处理效果参数进行实时调整。
 
 ## TODO
-* [] 更多的后处理效果
-  - [] 景深(Depth of Field)
-  - [] ......
-* [] 背景颜色及天空盒
-* [] 更加复杂的场景，包含灯光、PBR材质、透明物体等
-* [] ......(**灵感快来!!!**)
+* [ ] 更多的后处理效果
+  - [ ] 景深(Depth of Field)
+  - [ ] ......
+* [ ] 背景颜色及天空盒
+* [ ] 更加复杂的场景，包含灯光、PBR材质、透明物体等
+* [ ] ......(**灵感快来!!!**)
 
 ## 实现效果
-![TinyEngine](https://github.com/yinb1426/OpenGL-Tiny-Engine/tree/main/resources/textures/TinyEngine.png)
+![TinyEngine](https://github.com/yinb1426/OpenGL-Tiny-Engine/blob/main/resources/textures/TinyEngine.png)
 
 ## 使用说明
 ......
