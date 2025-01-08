@@ -40,7 +40,6 @@ namespace TinyEngine
 				auto& paramContent = iterator.value();
 				std::string paramNameString = paramContent["name"].get<std::string>();
 				const char* paramName = paramNameString.c_str();
-				std::string paramType = paramContent["type"].get<std::string>();
 				const Json& paramValue = paramContent["value"];
 				
 				std::vector<float> values;

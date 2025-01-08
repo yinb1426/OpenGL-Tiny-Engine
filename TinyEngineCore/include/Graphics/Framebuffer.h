@@ -25,7 +25,7 @@ namespace TinyEngine
 			{
 				glDeleteFramebuffers(1, &fbID);
 				glDeleteTextures(attachmentNum, textureIDs);
-				if (!depthID)  glDeleteTextures(1, &depthID);
+				if (depthID)  glDeleteTextures(1, &depthID);
 				delete[] textureIDs;
 				attachmentNum = 0;
 				fbID = 0;
@@ -138,7 +138,7 @@ namespace TinyEngine
 
 			for (int i = 0; i < attachmentNum; i++)
 			{
-				glGenBuffers(1, &textureIDs[i]);
+				glGenTextures(1, &textureIDs[i]);
 				glBindTexture(GL_TEXTURE_2D, textureIDs[i]);
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode);
@@ -146,7 +146,7 @@ namespace TinyEngine
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, textureIDs[i], 0);
 			}
 
-			unsigned int* attachment = new unsigned int[attachmentNum];
+			unsigned int attachment[16];
 			for (int i = 0; i < attachmentNum; i++)
 				attachment[i] = GL_COLOR_ATTACHMENT0 + i;
 			glDrawBuffers(attachmentNum, attachment);

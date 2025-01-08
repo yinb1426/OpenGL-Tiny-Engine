@@ -40,8 +40,6 @@ namespace TinyEngine
 				framebuffers[i] = std::make_shared<Framebuffer>("Framebuffers" + std::to_string(i), screenBuffer->GetWidth(), screenBuffer->GetWidth(), 1, false);
 			
 			gSceneManager->SetActiveScene("Planet Scene2");
-
-			// postProcessVolume = std::make_shared<PostProcessVolume>();
 		}
 		
 		static Application& GetInstance() { return *sInstance; }
@@ -55,7 +53,7 @@ namespace TinyEngine
 			{
 				// state update
 				gStateManager->Enable(GL_DEPTH_TEST);
-				// screenBuffer->UpdateFrameBuffer();
+				screenBuffer->UpdateFramebuffer();
 
 				// Render Scene
 				// Tick -> TickLogic: 更新所有物体的信息; TickRender: 渲染所有物体

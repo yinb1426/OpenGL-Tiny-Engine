@@ -1,4 +1,14 @@
 {
+  "params": [
+    {
+      "name": "color0",
+      "value": [0.0, 1.0, 1.0, 1.0]
+    }
+  ],
   "textures": [
+    {
+      "name": "diffuse1",
+      "path": "dky"
+    }
   ]
 }

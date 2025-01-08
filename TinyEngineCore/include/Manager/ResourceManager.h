@@ -42,7 +42,7 @@ namespace TinyEngine
 				this->AddShader(shaderName, std::make_shared<Shader>(shaderVSPath, shaderFSPath));
 			}
 
-			// Load Tetxures
+			// Load Textures
 			const auto& texturesJson = resourcesJson["textures"];
 			for (auto& iterator : texturesJson.items())
 			{
@@ -95,12 +95,12 @@ namespace TinyEngine
 		}
 		void AddModel(std::string name, std::shared_ptr<Model>&& model)
 		{
-			for (auto& loadedTexture : model->GetLoadedTextures())
+			this->models[name] = std::move(model);
+			for (auto& loadedTexture : this->models[name]->GetLoadedTextures())
 			{
 				const char* texturePath = loadedTexture.path.c_str();
 				this->AddTexture(loadedTexture.name, std::make_shared<Texture>(texturePath));
 			}
-			this->models[name] = std::move(model);
 		}
 		const std::shared_ptr<Model> GetModel(std::string name)
 		{

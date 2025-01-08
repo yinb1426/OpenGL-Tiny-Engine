@@ -30,7 +30,6 @@ namespace TinyEngine
 		{
 			for (int i = 0; i < 3; i++)
 				framebuffers[i]->UpdateFramebuffer();
-			screenBuffer->UpdateFramebuffer();
 
 			framebuffers[2]->Bind();
 			glClear(GL_COLOR_BUFFER_BIT);
