@@ -26,6 +26,7 @@ namespace TinyEngine
 		void Draw(std::shared_ptr<Material> material, TextureMap textureMap)
 		{
 			std::shared_ptr<Shader> shader = material->GetShader();
+			shader->Use();
 
 			// bind appropriate textures
 			unsigned int diffuseNr = 1;
@@ -66,11 +67,13 @@ namespace TinyEngine
 				}
 			}
 			vertexArray.Draw();
+			shader->Unuse();
 		}
 
 		void DrawInstanced(std::shared_ptr<Material> material, TextureMap textureMap, std::vector<glm::mat4> modelMatrices)
 		{
 			std::shared_ptr<Shader> shader = material->GetShader();
+			shader->Use();
 
 			// bind appropriate textures
 			unsigned int diffuseNr = 1;
@@ -127,6 +130,7 @@ namespace TinyEngine
 			glVertexAttribDivisor(10, 1);
 			vertexArray.Unbind();
 			vertexArray.DrawInstanced(modelMatrices.size());
+			shader->Unuse();
 		}
 	private:
 		std::vector<Vertex> vertices;

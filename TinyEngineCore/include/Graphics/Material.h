@@ -34,21 +34,25 @@ namespace TinyEngine
 		void SetUniform()
 		{
 			shader->Use();
-			const auto& params = paramsJson["params"];
-			for (auto& iterator : params.items())
+			if (paramsJson.contains("params"))
 			{
-				auto& paramContent = iterator.value();
-				std::string paramNameString = paramContent["name"].get<std::string>();
-				const char* paramName = paramNameString.c_str();
-				const Json& paramValue = paramContent["value"];
-				
-				std::vector<float> values;
-				if (paramValue.is_array())
-					values = paramValue.get<std::vector<float>>();
-				else
-					values = { paramValue.get<float>() };
-				shader->SetUniform(paramName, values);
+				const auto& params = paramsJson["params"];
+				for (auto& iterator : params.items())
+				{
+					auto& paramContent = iterator.value();
+					std::string paramNameString = paramContent["name"].get<std::string>();
+					const char* paramName = paramNameString.c_str();
+					const Json& paramValue = paramContent["value"];
+
+					std::vector<float> values;
+					if (paramValue.is_array())
+						values = paramValue.get<std::vector<float>>();
+					else
+						values = { paramValue.get<float>() };
+					shader->SetUniform(paramName, values);
+				}
 			}
+			shader->Unuse();
 		}
 		const std::shared_ptr<Shader> GetShader()
 		{

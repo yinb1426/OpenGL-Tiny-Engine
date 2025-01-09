@@ -1,0 +1,22 @@
+{
+    "name": "Nanosuit Scene",
+    "camera": {
+        "position": [0.0, 0.0, 8.0],
+        "yaw": -90.0,
+        "pitch": -0.0,
+        "near_plane": 0.2,
+        "far_plane": 200.0
+    },
+    "game_objects": [
+        {
+            "name": "nanosuit",
+            "model": "Nanosuit",
+            "material": "nanosuit-material",
+            "transform": {
+                "position": [0.0, -2.0, 0.0],
+                "rotation": [0, 0, 0],
+                "scale": [0.3, 0.3, 0.3]
+            }
+        }
+    ]
+}

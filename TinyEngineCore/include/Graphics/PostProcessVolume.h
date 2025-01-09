@@ -35,12 +35,12 @@ namespace TinyEngine
 			return effects[name];
 		}
 
-		void ApplyEffects(std::shared_ptr<Framebuffer> framebuffers[], std::shared_ptr<ScreenBuffer> screenBuffer)
+		void ApplyEffects(std::shared_ptr<ScreenBuffer> screenBuffer)
 		{
 			for (auto& effect : effects)
 			{
 				if (effect.second->isEnabled)
-					effect.second->ApplyEffect(framebuffers, screenBuffer);
+					effect.second->ApplyEffect(screenBuffer);
 			}
 		}
 	};

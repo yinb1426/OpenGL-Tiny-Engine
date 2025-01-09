@@ -26,6 +26,11 @@
             "fs": "planet.frag.glsl"
         },
         {
+            "name": "Nanosuit Shader",
+            "vs": "nanosuit.vert.glsl",
+            "fs": "nanosuit.frag.glsl"
+        },
+        {
             "name": "Vignette Shader",
             "vs": "postprocess.vert.glsl",
             "fs": "vignette.frag.glsl"
@@ -57,6 +62,11 @@
             "path": "awesomeface.png"
         },
         {
+            "name": "Container",
+            "path": "container.jpg"
+
+        },
+        {
             "name": "Displacement",
             "path": "DisplacementMap2.png"
         },
@@ -67,6 +77,10 @@
         {
             "name": "dky",
             "path": "dky.png"
+        },
+        {
+            "name": "nnu",
+            "path": "nnu.jpg"
         }
     ],
     "models": [
@@ -77,6 +91,10 @@
         {
             "name": "Planet",
             "path": "planet/planet.obj"
+        },
+        {
+            "name": "Nanosuit",
+            "path": "nanosuit/nanosuit.obj"
         }
     ],
     "materials": [
@@ -99,6 +117,11 @@
             "name": "planet-material2",
             "path": "planet.json",
             "shader": "Planet Shader2"
+        },
+        {
+            "name": "nanosuit-material",
+            "path": "nanosuit.json",
+            "shader": "Nanosuit Shader"
         }
     ]
 }

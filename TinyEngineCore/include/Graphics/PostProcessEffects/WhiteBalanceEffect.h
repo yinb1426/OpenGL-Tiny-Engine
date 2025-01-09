@@ -20,14 +20,15 @@ namespace TinyEngine
 		void InitializeEffect()
 		{
 			InitializeQuad();
+			framebuffer = std::make_shared<Framebuffer>("White Balance Framebuffer", SCREEN_WIDTH, SCREEN_HEIGHT, 1, false);
 			whiteBalanceShader = gResourceManager->GetShader("White Balance Shader");
 		}
 
-		void ApplyEffect(std::shared_ptr<Framebuffer> framebuffers[], std::shared_ptr<ScreenBuffer> screenBuffer)
+		void ApplyEffect(std::shared_ptr<ScreenBuffer> screenBuffer)
 		{
-			framebuffers[0]->UpdateFramebuffer();
+			framebuffer->UpdateFramebuffer();
 
-			framebuffers[0]->Bind();
+			framebuffer->Bind();
 			glClear(GL_COLOR_BUFFER_BIT);
 			whiteBalanceShader->Use();
 			whiteBalanceShader->SetUniform("temperature", temperature);
@@ -35,14 +36,15 @@ namespace TinyEngine
 			screenBuffer->BindTexture(0);
 			RenderQuad();
 			whiteBalanceShader->Unuse();
-			framebuffers[0]->Unbind();
+			framebuffer->Unbind();
 
-			framebuffers[0]->BlitFramebuffer(screenBuffer.get());
+			framebuffer->BlitFramebuffer(screenBuffer.get());
 		}
 	public:
 		float temperature; 
 		float tint;
 	private:
+		std::shared_ptr<Framebuffer> framebuffer;
 		std::shared_ptr<Shader> whiteBalanceShader;
 	};
 }

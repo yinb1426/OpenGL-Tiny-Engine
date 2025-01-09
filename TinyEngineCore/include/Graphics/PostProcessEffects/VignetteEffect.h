@@ -21,14 +21,15 @@ namespace TinyEngine
 		void InitializeEffect()
 		{
 			InitializeQuad();
+			framebuffer = std::make_shared<Framebuffer>("Vignette Framebuffer", SCREEN_WIDTH, SCREEN_HEIGHT, 1, false);
 			vignetteShader = gResourceManager->GetShader("Vignette Shader");
 		}
 
-		void ApplyEffect(std::shared_ptr<Framebuffer> framebuffers[], std::shared_ptr<ScreenBuffer> screenBuffer)
+		void ApplyEffect(std::shared_ptr<ScreenBuffer> screenBuffer)
 		{
-			framebuffers[0]->UpdateFramebuffer();
+			framebuffer->UpdateFramebuffer();
 
-			framebuffers[0]->Bind();
+			framebuffer->Bind();
 			glClear(GL_COLOR_BUFFER_BIT);
 			vignetteShader->Use();
 			vignetteShader->SetUniform("vignetteColor", vignetteColor);
@@ -38,9 +39,9 @@ namespace TinyEngine
 			screenBuffer->BindTexture(0);
 			RenderQuad();
 			vignetteShader->Unuse();
-			framebuffers[0]->Unbind();
+			framebuffer->Unbind();
 
-			framebuffers[0]->BlitFramebuffer(screenBuffer.get());
+			framebuffer->BlitFramebuffer(screenBuffer.get());
 		}
 	public:
 		glm::vec4 vignetteColor;
@@ -48,6 +49,7 @@ namespace TinyEngine
 		float intensity;
 		float smoothness;
 	private:
+		std::shared_ptr<Framebuffer> framebuffer;
 		std::shared_ptr<Shader> vignetteShader;
 	};
 }

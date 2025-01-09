@@ -16,7 +16,7 @@ namespace TinyEngine
         PostProcessEffect() = default;
         virtual ~PostProcessEffect() = default;
 		virtual void InitializeEffect() = 0;
-		virtual void ApplyEffect(std::shared_ptr<Framebuffer> framebuffers[], std::shared_ptr<ScreenBuffer> screenBuffer) = 0;
+		virtual void ApplyEffect(std::shared_ptr<ScreenBuffer> screenBuffer) = 0;
         void DeleteEffect() const
         {
             glDeleteVertexArrays(1, &quadVAO);

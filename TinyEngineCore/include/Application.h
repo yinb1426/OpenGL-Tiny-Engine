@@ -11,7 +11,6 @@
 #include "Graphics/ScreenBuffer.h"
 #include "Graphics/PostProcessVolume.h"
 #include "Geometry/Model.h"
-#include "Graphics/PostProcessVolume.h"
 #include <iostream>
 
 
@@ -36,8 +35,6 @@ namespace TinyEngine
 			postProcessVolume = std::make_shared<PostProcessVolume>();
 
 			screenBuffer = std::make_shared<ScreenBuffer>(width, height);
-			for (int i = 0; i < 4; i++)
-				framebuffers[i] = std::make_shared<Framebuffer>("Framebuffers" + std::to_string(i), screenBuffer->GetWidth(), screenBuffer->GetWidth(), 1, false);
 			
 			gSceneManager->SetActiveScene("Planet Scene2");
 		}
@@ -64,7 +61,7 @@ namespace TinyEngine
 				screenBuffer->Unbind();
 
 				// Post Process
-				postProcessVolume->ApplyEffects(framebuffers, screenBuffer);
+				postProcessVolume->ApplyEffects(screenBuffer);
 
 				screenBuffer->RenderToScreen();
 
@@ -91,7 +88,7 @@ namespace TinyEngine
 	private:
 		static Application* sInstance;
 		std::shared_ptr<ScreenBuffer> screenBuffer;
-		std::shared_ptr<Framebuffer> framebuffers[4];
+		// std::shared_ptr<Framebuffer> framebuffers[10];
 		std::shared_ptr<PostProcessVolume> postProcessVolume;
 	};
 }

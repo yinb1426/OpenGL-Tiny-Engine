@@ -21,12 +21,14 @@ namespace TinyEngine
 		void InitializeEffect()
 		{
 			InitializeQuad();
+			for (int i = 0; i < 3; i++)
+				framebuffers[i] = std::make_shared<Framebuffer>("Framebuffers" + std::to_string(i), SCREEN_WIDTH, SCREEN_HEIGHT, 1, false);
 			brightnessShader = gResourceManager->GetShader("Bloom-Brightness Shader");
 			blurShader = gResourceManager->GetShader("Bloom-Blur Shader");
 			combineShader = gResourceManager->GetShader("Bloom-Combine Shader");
 		}
 
-		void ApplyEffect(std::shared_ptr<Framebuffer> framebuffers[], std::shared_ptr<ScreenBuffer> screenBuffer)
+		void ApplyEffect(std::shared_ptr<ScreenBuffer> screenBuffer)
 		{
 			for (int i = 0; i < 3; i++)
 				framebuffers[i]->UpdateFramebuffer();
@@ -80,6 +82,7 @@ namespace TinyEngine
 		float threshold;
 		float intensity;
 	private:
+		std::shared_ptr<Framebuffer> framebuffers[3];
 		std::shared_ptr<Shader> brightnessShader;
 		std::shared_ptr<Shader> blurShader;
 		std::shared_ptr<Shader> combineShader;
