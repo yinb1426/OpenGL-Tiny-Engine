@@ -11,7 +11,7 @@
 using namespace std;
 namespace TinyEngine
 {
-	using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture>>;
+	using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
 	class Model
 	{
 	public:

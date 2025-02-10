@@ -1,6 +1,6 @@
 #pragma once
 #define STB_IMAGE_IMPLEMENTATION
-#include "Graphics/Texture.h"
+
 #include <3rd/stb_image.h>
 #include <3rd/glad/glad.h>
 #include <iostream>
@@ -9,16 +9,16 @@
 
 namespace TinyEngine
 {
-	class Texture
+	class Texture2D
 	{
 	public:
-		Texture(const char* texturePath)
+		Texture2D(const char* texturePath)
 		{
-			InitializeTexture(texturePath);
+			InitializeTexture2D(texturePath);
 		}
-		~Texture()
+		~Texture2D()
 		{
-			std::cout << "Texture Destroyed: " << this->ID << std::endl;
+			std::cout << "Texture2D Destroyed: " << this->ID << std::endl;
 			Destroy();
 			this->ID = 0;
 		}
@@ -62,7 +62,7 @@ namespace TinyEngine
 		}
 		void Bind(int slot) const
 		{
-			if (slot < 0 || slot>GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS)
+			if (slot < 0 || slot > GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS)
 				throw std::invalid_argument("Slot Number Error: " + std::to_string(slot));
 			glActiveTexture(GL_TEXTURE0 + slot);
 			glBindTexture(GL_TEXTURE_2D, this->ID);
@@ -77,7 +77,7 @@ namespace TinyEngine
 				glDeleteTextures(1, &this->ID);
 		}
 	private:
-		void InitializeTexture(const char* texturePath)
+		void InitializeTexture2D(const char* texturePath)
 		{
 			char absolutePath[1024];
 			if (_fullpath(absolutePath, texturePath, 1024))

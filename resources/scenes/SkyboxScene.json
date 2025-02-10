@@ -1,0 +1,17 @@
+{
+    "name": "Skybox Scene",
+    "camera": {
+        "position": [0.0, 0.0, 0.0],
+        "yaw": -90.0,
+        "pitch": -0.0,
+        "near_plane": 0.2,
+        "far_plane": 200.0
+    },
+    "skybox": {
+        "type": "cubemap",
+        "value": "skybox"
+    },
+    "game_objects": [
+        
+    ]
+}

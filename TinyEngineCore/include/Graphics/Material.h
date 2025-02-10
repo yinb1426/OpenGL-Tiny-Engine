@@ -1,6 +1,6 @@
 #pragma once
 #include "Graphics/Shader.h"
-#include "Graphics/Texture.h"
+#include "Graphics/Texture2D.h"
 #include <vector>
 #include <string>
 #include <memory>
@@ -12,7 +12,7 @@
 namespace TinyEngine
 {
 	using Json = nlohmann::json;
-	using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture>>;
+	using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
 	class Material
 	{
 	public:

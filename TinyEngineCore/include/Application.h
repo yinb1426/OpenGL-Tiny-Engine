@@ -7,7 +7,7 @@
 #include "Config.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Material.h"
-#include "Graphics/Texture.h"
+#include "Graphics/Texture2D.h"
 #include "Graphics/ScreenBuffer.h"
 #include "Graphics/PostProcessVolume.h"
 #include "Geometry/Model.h"
@@ -36,7 +36,7 @@ namespace TinyEngine
 
 			screenBuffer = std::make_shared<ScreenBuffer>(width, height);
 			
-			gSceneManager->SetActiveScene("Planet Scene2");
+			gSceneManager->SetActiveScene("Nanosuit Scene");
 		}
 		
 		static Application& GetInstance() { return *sInstance; }

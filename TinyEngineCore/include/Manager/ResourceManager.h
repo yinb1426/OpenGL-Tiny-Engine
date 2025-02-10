@@ -2,7 +2,8 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Material.h"
 #include "Geometry/Model.h"
-#include "Graphics/Texture.h"
+#include "Graphics/Texture2D.h"
+#include "Graphics/Cubemap.h"
 #include "Config.h"
 #include <memory>
 #include <string>
@@ -13,7 +14,8 @@ namespace TinyEngine
 	using ShaderMap = std::unordered_map<std::string, std::shared_ptr<Shader>>;
 	using MaterialMap = std::unordered_map<std::string, std::shared_ptr<Material>>;
 	using ModelMap = std::unordered_map<std::string, std::shared_ptr<Model>>;
-	using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture>>;
+	using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
+	using CubemapMap = std::unordered_map<std::string, std::shared_ptr<Cubemap>>;
 
 	class ResourceManager
 	{
@@ -50,7 +52,7 @@ namespace TinyEngine
 				std::string textureName = textureJson["name"].get<std::string>();
 				std::string texturePathString = std::string(TEXTURE_ROOT_PATH).append(textureJson["path"].get<std::string>());
 				const char* texturePath = texturePathString.c_str();
-				this->AddTexture(textureName, std::make_shared<Texture>(texturePath));
+				this->AddTexture(textureName, std::make_shared<Texture2D>(texturePath));
 			}
 
 			// Load Models
@@ -75,6 +77,18 @@ namespace TinyEngine
 				const char* materialPath = materialPathString.c_str();
 				this->AddMaterial(materialName, std::make_shared<Material>(materialPath, this->GetShader(materialShaderName)));
 			}
+
+			// Load Cubemaps
+			const auto& cubemapsJson = resourcesJson["cubemaps"];
+			for (auto& iterator : cubemapsJson.items())
+			{
+				auto& cubemapJson = iterator.value();
+				std::string cubemapName = cubemapJson["name"].get<std::string>();
+				std::vector<std::string> cubemapFaces = cubemapJson["path"].get<std::vector<std::string>>();
+				for(auto& cubemapFace : cubemapFaces)
+					cubemapFace = std::string(CUBEMAP_ROOT_PATH).append(cubemapFace);
+				this->AddCubemap(cubemapName, std::make_shared<Cubemap>(cubemapFaces));
+			}
 		}
 
 		void AddShader(std::string name, std::shared_ptr<Shader>&& shader)
@@ -85,11 +99,11 @@ namespace TinyEngine
 		{
 			return this->shaders[name];
 		}
-		void AddTexture(std::string name, std::shared_ptr<Texture>&& texture)
+		void AddTexture(std::string name, std::shared_ptr<Texture2D>&& texture)
 		{
 			this->textures[name] = std::move(texture);
 		}
-		const std::shared_ptr<Texture> GetTexture(std::string name)
+		const std::shared_ptr<Texture2D> GetTexture(std::string name)
 		{
 			return this->textures[name];
 		}
@@ -99,7 +113,7 @@ namespace TinyEngine
 			for (auto& loadedTexture : this->models[name]->GetLoadedTextures())
 			{
 				const char* texturePath = loadedTexture.path.c_str();
-				this->AddTexture(loadedTexture.name, std::make_shared<Texture>(texturePath));
+				this->AddTexture(loadedTexture.name, std::make_shared<Texture2D>(texturePath));
 			}
 		}
 		const std::shared_ptr<Model> GetModel(std::string name)
@@ -114,6 +128,14 @@ namespace TinyEngine
 		{
 			return this->materials[name];
 		}
+		void AddCubemap(std::string name, std::shared_ptr<Cubemap>&& cubemap)
+		{
+			this->cubemaps[name] = std::move(cubemap);
+		}
+		const std::shared_ptr<Cubemap> GetCubemap(std::string name)
+		{
+			return this->cubemaps[name];
+		}
 		const TextureMap GetTextureMap()
 		{
 			return this->textures;
@@ -123,6 +145,7 @@ namespace TinyEngine
 		MaterialMap materials;
 		ModelMap models;
 		TextureMap textures;
+		CubemapMap cubemaps;
 	};
 
 	extern std::unique_ptr<ResourceManager> gResourceManager;

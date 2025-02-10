@@ -7,6 +7,10 @@
         "near_plane": 0.2,
         "far_plane": 200.0
     },
+    "skybox": {
+        "type": "solid-color",
+        "value": [0.0, 0.0, 0.0, 1.0]
+    },
     "game_objects": [
         {
             "name": "planet",

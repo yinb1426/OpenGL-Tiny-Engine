@@ -72,6 +72,7 @@ namespace TinyEngine
 			camera.UpdateCameraParameters(glm::vec3(cameraPos[0], cameraPos[1], cameraPos[2]), cameraYaw, cameraPitch, cameraZNear, cameraZFar);
 			scene->SetCamera(camera);
 
+			// Game Objects
 			const auto& gosJson = sceneJson["game_objects"];
 
 			for (auto& iterator : gosJson.items())
@@ -112,6 +113,26 @@ namespace TinyEngine
 					goMaterial
 				});
 			}
+
+			// TODO: Skybox
+			const auto& skyboxJson = sceneJson["skybox"];
+
+			std::string skyboxType = skyboxJson["type"].get<std::string>();
+			std::shared_ptr<Skybox> skybox = nullptr;
+			if (skyboxType == "cubemap")
+			{
+				std::string skyboxValue = skyboxJson["value"].get<std::string>();
+				std::shared_ptr<Cubemap> cubemap = gResourceManager->GetCubemap(skyboxValue);
+				skybox = std::make_shared<Skybox>(Skybox::SkyboxType::CUBEMAP);
+				skybox->SetSkyboxCubemap(cubemap);
+			}
+			else if (skyboxType == "solid_color")
+			{
+				std::vector<float> skyboxColor = skyboxJson["value"].get<std::vector<float>>();
+				skybox = std::make_shared<Skybox>(Skybox::SkyboxType::SOLID_COLOR);
+				skybox->SetSkyboxColor(glm::vec4(skyboxColor[0], skyboxColor[1], skyboxColor[2], skyboxColor[3]));
+			}
+			scene->SetSkybox(skybox);
 			this->AddScene(sceneName, scene);
 		}
 	private:

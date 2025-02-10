@@ -7,7 +7,7 @@
 
 namespace TinyEngine
 {
-	using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture>>;
+	using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
 
 	struct MeshTexture
 	{
@@ -60,7 +60,7 @@ namespace TinyEngine
 					std::string texturesNameString = texturesContent["name"].get<std::string>();
 					const char* texturesName = texturesNameString.c_str();
 					std::string texturesPath = texturesContent["path"].get<std::string>();
-					std::shared_ptr<Texture> curTexture = textureMap[texturesPath];
+					std::shared_ptr<Texture2D> curTexture = textureMap[texturesPath];
 					shader->SetUniform(texturesName, index);
 					curTexture->Bind(index);
 					index++;
@@ -108,7 +108,7 @@ namespace TinyEngine
 					std::string texturesNameString = texturesContent["name"].get<std::string>();
 					const char* texturesName = texturesNameString.c_str();
 					std::string texturesPath = texturesContent["path"].get<std::string>();
-					std::shared_ptr<Texture> curTexture = textureMap[texturesPath];
+					std::shared_ptr<Texture2D> curTexture = textureMap[texturesPath];
 					shader->SetUniform(texturesName, index);
 					curTexture->Bind(index);
 					index++;

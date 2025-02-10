@@ -3,6 +3,7 @@
 #include "Geometry/Transform.h"
 #include "Graphics/Material.h"
 #include "Graphics/Camera.h"
+#include "Graphics/Skybox.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -42,6 +43,14 @@ namespace TinyEngine
 		{
 			this->camera = std::move(camera);
 		}
+		void SetSkybox(Skybox skybox)
+		{
+			this->skybox = std::make_shared<Skybox>(skybox);
+		}
+		void SetSkybox(std::shared_ptr<Skybox>& skybox)
+		{
+			this->skybox = std::move(skybox);
+		}
 		std::shared_ptr<Camera> GetCamera() const
 		{
 			return this->camera;
@@ -63,9 +72,11 @@ namespace TinyEngine
 			{
 				go.second.Render(*camera);
 			}
+			skybox->DrawSkybox(*camera, gResourceManager->GetShader("Skybox Shader")); // TODO: ´¿É«±³¾°»æÖÆ
 		}
 	public:
 		std::shared_ptr<Camera> camera;
 		GameObjectMap gameObjects;
+		std::shared_ptr<Skybox> skybox;
 	};
 }

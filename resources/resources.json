@@ -54,6 +54,11 @@
             "name": "White Balance Shader",
             "vs": "postprocess.vert.glsl",
             "fs": "white-balance.frag.glsl"
+        },
+        {
+            "name": "Skybox Shader",
+            "vs": "skybox.vert.glsl",
+            "fs": "skybox.frag.glsl"
         }
     ],
     "textures": [
@@ -122,6 +127,19 @@
             "name": "nanosuit-material",
             "path": "nanosuit.json",
             "shader": "Nanosuit Shader"
+        }
+    ],
+    "cubemaps": [
+        {
+            "name": "skybox",
+            "path": [
+                "skybox/right.jpg",
+                "skybox/left.jpg",
+                "skybox/top.jpg",
+                "skybox/bottom.jpg",
+                "skybox/front.jpg",
+                "skybox/back.jpg"
+            ]
         }
     ]
 }
